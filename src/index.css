@@ -1,0 +1,63 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 20px;
+  line-height: 2;
+  font-family: 'system-ui', system-ui, sans-serif;
+  color: #333;
+}
+
+input {
+  font-size: inherit;
+  padding: 10px 15px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  min-width: 320px;
+}
+
+input[type='checkbox'] {
+  margin-right: 10px;
+}
+
+label {
+  cursor: pointer;
+}
+
+button {
+  font-size: inherit;
+  border: 0;
+  outline: 0;
+  background: white;
+  cursor: pointer;
+  background: #00cba9;
+  border: 0;
+  padding: 0 10px;
+  display: block;
+  border-radius: 3px;
+  color: #fff;
+}
+
+button:hover {
+  background: rgba(0, 203, 169, 0.8);
+}
+
+button.red {
+  background: rgba(255, 48, 85, 1);
+}
+
+button.red:hover {
+  background: rgba(255, 48, 85, 0.9);
+}
+
+button.gray {
+  background: #ddd;
+  color: #666;
+}
+
+pre {
+  font-size: 14px;
+}
