@@ -1,23 +1,37 @@
 // @flow
 
 import React from 'react';
-import styled from 'styled-components';
+import glamorous, { Div } from 'glamorous';
 import { formatName } from './formatters';
 import Counter from './Counter';
+import Button from './Button';
 import type { AggregatedTimetableItem } from './TypeDefinitions';
 
-const StyledTimetableItem = styled.div`
-  font-weight: ${({ isActive }) => (isActive ? '700' : '400')};
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border-radius: 3px;
+const ListItem = glamorous.div(
+  {
+    fontWeight: ({ isActive }) => (isActive ? '700' : '400'),
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 3,
+    '&:nth-child(odd)': {
+      backgroundColor: '#f4f3f4'
+    }
+  },
+  ({ isActive }) => ({
+    fontWeight: isActive ? '700' : '400'
+  })
+);
 
-  &:nth-child(odd) {
-    background: #f4f3f4;
-  }
-`;
+const Bubble = glamorous.div({
+  padding: '6px 10px',
+  borderRadius: 5,
+  backgroundColor: '#ddd',
+  marginLeft: 10,
+  width: 100,
+  textAlign: 'center'
+});
 
 type Props = {
   formatDuration: (value: number) => string,
@@ -63,9 +77,10 @@ class TimetableItem extends React.PureComponent<Props, State> {
       onMakeActiveClick,
       onNameChange
     } = this.props;
+
     return (
-      <StyledTimetableItem isActive={isActive}>
-        <div style={{ flex: 1 }}>
+      <ListItem isActive={isActive}>
+        <Div flex={1}>
           {!this.state.editing ? (
             <span onClick={() => this.setState({ editing: true })}>
               {formatName(item.task)}
@@ -78,31 +93,22 @@ class TimetableItem extends React.PureComponent<Props, State> {
               onChange={e => onNameChange(e.target.value)}
             />
           )}
-        </div>
+        </Div>
 
-        <div style={{ display: 'flex' }}>
+        <Div display="flex">
           {!isActive && (
-            <button onClick={onMakeActiveClick}>Work on this instead</button>
+            <Button onClick={onMakeActiveClick}>Work on this instead</Button>
           )}
 
-          <div
-            style={{
-              padding: '6px 10px',
-              borderRadius: 5,
-              backgroundColor: '#ddd',
-              marginLeft: 10,
-              width: 100,
-              textAlign: 'center'
-            }}
-          >
+          <Bubble>
             <Counter
               initialCounter={item.duration}
               active={isActive}
               format={formatDuration}
             />
-          </div>
-        </div>
-      </StyledTimetableItem>
+          </Bubble>
+        </Div>
+      </ListItem>
     );
   }
 }

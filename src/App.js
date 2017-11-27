@@ -6,6 +6,7 @@ import ReducerComponent from './ReducerComponent';
 import TimetableItem from './TimetableItem';
 import { formatName, formatTime, formatHalfHours } from './formatters';
 import aggregateTimetable from './aggregateTimetable';
+import Button from './Button';
 import type { Database, ID } from './TypeDefinitions';
 
 type State = {
@@ -181,7 +182,8 @@ class App extends ReducerComponent<Props, State, Action> {
                   id: item.id,
                   task: item.task,
                   date: new Date()
-                })}
+                })
+              }
             />
           ))}
 
@@ -202,25 +204,27 @@ class App extends ReducerComponent<Props, State, Action> {
                   id: cuid(),
                   task,
                   date: new Date()
-                })}
+                })
+              }
             />
 
-            <button
-              className="red"
+            <Button
+              light
               onClick={() =>
-                this.dispatch({ type: 'FINISH', date: new Date() })}
+                this.dispatch({ type: 'FINISH', date: new Date() })
+              }
             >
               I am going home
-            </button>
+            </Button>
           </div>
 
-          <button
-            className="gray"
+          <Button
+            neutral
             style={{ marginTop: 20, padding: '7px 15px' }}
             onClick={this.props.clearState}
           >
             Clear localStorage
-          </button>
+          </Button>
         </div>
 
         <div
@@ -257,9 +261,9 @@ const AddTaskForm = ({ onSubmit }) => {
         placeholder="What did you just start on?"
       />
 
-      <button type="submit" style={{ marginLeft: 5 }}>
+      <Button type="submit" style={{ marginLeft: 5 }}>
         Go
-      </button>
+      </Button>
     </form>
   );
 };
