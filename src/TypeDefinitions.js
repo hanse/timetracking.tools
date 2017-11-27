@@ -12,10 +12,12 @@ export type AggregatedTimetableItem = {|
 
 export type AggregatedTimetable = Array<AggregatedTimetableItem>;
 
+export type Task = {
+  id: string,
+  name: string,
+  timestamps: Array<Date>
+};
+
 export type Database = {
-  [key: ID]: {
-    id: string,
-    name: string,
-    timestamps: Array<Date>
-  }
+  [key: ID]: Task
 };

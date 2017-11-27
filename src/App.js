@@ -2,12 +2,14 @@
 
 import React from 'react';
 import cuid from 'cuid';
+import { Div } from 'glamorous';
 import ReducerComponent from './ReducerComponent';
 import TimetableItem from './TimetableItem';
 import { formatName, formatTime, formatHalfHours } from './formatters';
 import aggregateTimetable from './aggregateTimetable';
 import Button from './Button';
-import type { Database, ID } from './TypeDefinitions';
+import AddTaskForm from './AddTaskForm';
+import type { Database, ID, AggregatedTimetableItem } from './TypeDefinitions';
 
 type State = {
   active: ?ID,
@@ -129,6 +131,32 @@ class App extends ReducerComponent<Props, State, Action> {
 
   reducer = reducer;
 
+  actions = {
+    onToggleExact: () => this.dispatch({ type: 'TOGGLE_EXACT' }),
+    onTaskAdded: (task: string) =>
+      this.dispatch({
+        type: 'NEW_TASK',
+        id: cuid(),
+        task,
+        date: new Date()
+      }),
+    onMakeActiveClicked: (item: AggregatedTimetableItem) => () =>
+      this.dispatch({
+        type: 'NEW_TASK',
+        id: item.id,
+        task: item.task,
+        date: new Date()
+      }),
+    onTaskNameChanged: (item: AggregatedTimetableItem) => (name: string) => {
+      this.dispatch({
+        type: 'CHANGE_NAME',
+        id: item.id,
+        name
+      });
+    },
+    onFinishClicked: () => this.dispatch({ type: 'FINISH', date: new Date() })
+  };
+
   componentDidUpdate() {
     this.props.saveState(this.state);
   }
@@ -140,16 +168,14 @@ class App extends ReducerComponent<Props, State, Action> {
     const activeTask = active ? tasks[active] : {};
 
     return (
-      <div style={{ display: 'flex' }}>
-        <div style={{ flex: 1, height: '100vh', padding: 40 }}>
+      <Div display="flex">
+        <Div flex={1} height="100vh" padding={40}>
           <h1>Timetracker</h1>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}
+          <Div
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="space-between"
           >
             <strong>Currently working on {formatName(activeTask.name)}</strong>
 
@@ -157,11 +183,11 @@ class App extends ReducerComponent<Props, State, Action> {
               <input
                 type="checkbox"
                 checked={!exact}
-                onChange={() => this.dispatch({ type: 'TOGGLE_EXACT' })}
+                onChange={this.actions.onToggleExact}
               />
               Show half hours
             </label>
-          </div>
+          </Div>
 
           {aggregateTimetable(tasks).map((item, index) => (
             <TimetableItem
@@ -169,103 +195,47 @@ class App extends ReducerComponent<Props, State, Action> {
               item={item}
               isActive={item.id === active}
               formatDuration={formatDuration}
-              onNameChange={name => {
-                this.dispatch({
-                  type: 'CHANGE_NAME',
-                  id: item.id,
-                  name
-                });
-              }}
-              onMakeActiveClick={() =>
-                this.dispatch({
-                  type: 'NEW_TASK',
-                  id: item.id,
-                  task: item.task,
-                  date: new Date()
-                })
-              }
+              onNameChange={this.actions.onTaskNameChanged(item)}
+              onMakeActiveClick={this.actions.onMakeActiveClicked(item)}
             />
           ))}
 
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              padding: 20,
-              backgroundColor: '#F4F3F4',
-              marginTop: 20,
-              borderRadius: 3
-            }}
+          <Div
+            display="flex"
+            justifyContent="space-between"
+            padding={20}
+            backgroundColor="#F4F3F4"
+            marginTop={20}
+            borderRadius={3}
           >
-            <AddTaskForm
-              onSubmit={task =>
-                this.dispatch({
-                  type: 'NEW_TASK',
-                  id: cuid(),
-                  task,
-                  date: new Date()
-                })
-              }
-            />
+            <AddTaskForm onSubmit={this.actions.onTaskAdded} />
 
-            <Button
-              light
-              onClick={() =>
-                this.dispatch({ type: 'FINISH', date: new Date() })
-              }
-            >
+            <Button light onClick={this.actions.onFinishClicked}>
               I am going home
             </Button>
-          </div>
+          </Div>
 
           <Button
             neutral
-            style={{ marginTop: 20, padding: '7px 15px' }}
+            css={{ marginTop: 20, padding: '7px 15px', color: '#666' }}
             onClick={this.props.clearState}
           >
             Clear localStorage
           </Button>
-        </div>
+        </Div>
 
-        <div
-          style={{
-            flex: 1,
-            height: '100vh',
-            padding: 40,
-            overflow: 'scroll'
-          }}
+        <Div
+          flex={1}
+          height="100vh"
+          padding={40}
+          overflow="scroll"
+          fontSize={14}
         >
           <pre>{JSON.stringify(tasks, null, 2)}</pre>
-        </div>
-      </div>
+        </Div>
+      </Div>
     );
   }
 }
-
-const AddTaskForm = ({ onSubmit }) => {
-  let input;
-
-  const handleSubmit = (e: SyntheticEvent<*>) => {
-    if (!input) return;
-    e.preventDefault();
-    input.value !== '' && onSubmit(input.value);
-    input.value = '';
-    input.focus();
-  };
-
-  return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex' }}>
-      <input
-        ref={ref => (input = ref)}
-        type="text"
-        placeholder="What did you just start on?"
-      />
-
-      <Button type="submit" style={{ marginLeft: 5 }}>
-        Go
-      </Button>
-    </form>
-  );
-};
 
 export default App;
