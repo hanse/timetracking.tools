@@ -7,7 +7,8 @@ export type Timetable = { [key: ID]: Array<Date> };
 export type AggregatedTimetableItem = {|
   task: ID,
   duration: Duration,
-  id: string
+  id: string,
+  timestamps: Array<Date>
 |};
 
 export type AggregatedTimetable = Array<AggregatedTimetableItem>;

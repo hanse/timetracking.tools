@@ -1,24 +1,28 @@
 // @flow
 
-import React from 'react';
+import React, { type Node } from 'react';
 
 type Props = {
-  initialCounter: number,
+  initialDuration: number,
   active: boolean,
-  format: number => string
+  format: number => Node,
+  startTime: Date
 };
 
 type State = {
-  counter: number
+  value: number,
+  accumulatedDuration: number
 };
 
 class Counter extends React.PureComponent<Props, State> {
   static defaultProps = {
-    format: n => n
+    format: n => n,
+    startTime: new Date()
   };
 
   state = {
-    counter: this.props.initialCounter
+    value: this.props.initialDuration,
+    accumulatedDuration: this.props.initialDuration
   };
 
   counter: number;
@@ -30,16 +34,13 @@ class Counter extends React.PureComponent<Props, State> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.initialCounter > this.state.counter) {
-      this.setState({ counter: nextProps.initialCounter });
-    }
-
     if (this.props.active && !nextProps.active) {
       this.stopTimer();
     }
 
     if (!this.props.active && nextProps.active) {
       this.startTimer();
+      this.setState({ accumulatedDuration: nextProps.initialDuration });
     }
   }
 
@@ -49,8 +50,14 @@ class Counter extends React.PureComponent<Props, State> {
 
   startTimer() {
     this.counter = setInterval(
-      () => this.setState(state => ({ counter: state.counter + 1000 })),
-      1000
+      () =>
+        this.setState(state => ({
+          value:
+            Date.now() -
+            this.props.startTime.getTime() +
+            this.state.accumulatedDuration
+        })),
+      200
     );
   }
 
@@ -59,7 +66,7 @@ class Counter extends React.PureComponent<Props, State> {
   }
 
   render() {
-    return this.props.format(this.state.counter);
+    return this.props.format(this.state.value);
   }
 }
 

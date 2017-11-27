@@ -78,6 +78,11 @@ class TimetableItem extends React.PureComponent<Props, State> {
       onNameChange
     } = this.props;
 
+    const startTime =
+      item.timestamps.length % 2 === 1
+        ? item.timestamps[item.timestamps.length - 1]
+        : new Date();
+
     return (
       <ListItem isActive={isActive}>
         <Div flex={1}>
@@ -102,9 +107,10 @@ class TimetableItem extends React.PureComponent<Props, State> {
 
           <Bubble>
             <Counter
-              initialCounter={item.duration}
+              initialDuration={item.duration}
+              startTime={startTime}
               active={isActive}
-              format={formatDuration}
+              format={value => <span>{formatDuration(value)}</span>}
             />
           </Bubble>
         </Div>

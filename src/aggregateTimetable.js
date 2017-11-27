@@ -29,7 +29,8 @@ export default function aggregateTimetable(
     return {
       task: timetable[task].name,
       duration,
-      id: task
+      id: task,
+      timestamps: tasks
     };
   });
 }

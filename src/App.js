@@ -41,9 +41,19 @@ type Action =
       type: 'CHANGE_NAME',
       id: ID,
       name: string
-    };
+    }
+  | {
+      type: 'CLEAR_STATE'
+    }
+  | { type: 'INIT' };
 
-function reducer(state: State, action: Action) {
+const initialState = {
+  exact: true,
+  active: null,
+  tasks: {}
+};
+
+function reducer(state: State = initialState, action: Action) {
   switch (action.type) {
     case 'TOGGLE_EXACT':
       return {
@@ -117,19 +127,17 @@ function reducer(state: State, action: Action) {
         }
       };
 
+    case 'CLEAR_STATE':
+      return initialState;
+
     default:
       return state;
   }
 }
 
 class App extends ReducerComponent<Props, State, Action> {
-  state = this.props.initialState || {
-    exact: true,
-    active: null,
-    tasks: {}
-  };
-
   reducer = reducer;
+  state = this.reducer(this.props.initialState || undefined, { type: 'INIT' });
 
   actions = {
     onToggleExact: () => this.dispatch({ type: 'TOGGLE_EXACT' }),
@@ -157,9 +165,18 @@ class App extends ReducerComponent<Props, State, Action> {
     onFinishClicked: () => this.dispatch({ type: 'FINISH', date: new Date() })
   };
 
+  componentDidMount() {
+    window.onbeforeunload = () => this.actions.onFinishClicked();
+  }
+
   componentDidUpdate() {
     this.props.saveState(this.state);
   }
+
+  handleClear = () => {
+    this.dispatch({ type: 'CLEAR_STATE' });
+    this.props.clearState();
+  };
 
   render() {
     const { tasks, exact, active } = this.state;
@@ -218,9 +235,9 @@ class App extends ReducerComponent<Props, State, Action> {
           <Button
             neutral
             css={{ marginTop: 20, padding: '7px 15px', color: '#666' }}
-            onClick={this.props.clearState}
+            onClick={this.handleClear}
           >
-            Clear localStorage
+            Clear State
           </Button>
         </Div>
 
