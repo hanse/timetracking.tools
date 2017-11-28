@@ -6,7 +6,7 @@ import { Div } from 'glamorous';
 import ReducerComponent from './ReducerComponent';
 import TimetableItem from './TimetableItem';
 import { formatName, formatTime, formatHalfHours } from './formatters';
-import aggregateTimetable from './aggregateTimetable';
+import aggregateTimetable, { aggregateCSV } from './aggregateTimetable';
 import Button from './Button';
 import AddTaskForm from './AddTaskForm';
 import type { Database, ID, AggregatedTimetableItem } from './TypeDefinitions';
@@ -248,6 +248,7 @@ class App extends ReducerComponent<Props, State, Action> {
           overflow="scroll"
           fontSize={14}
         >
+          <pre>{JSON.stringify(aggregateCSV(tasks), null, 2)}</pre>
           <pre>{JSON.stringify(tasks, null, 2)}</pre>
         </Div>
       </Div>
