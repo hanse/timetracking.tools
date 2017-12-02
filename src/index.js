@@ -3,7 +3,7 @@
 import 'glamor/reset';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import parse from 'date-fns/parse';
+import toDate from 'date-fns/toDate';
 import { css } from 'glamor';
 import App from './App';
 
@@ -44,7 +44,7 @@ function rehydrateState(parsedJson) {
     tasks: Object.keys(parsedJson.tasks).reduce((tasks, taskId) => {
       tasks[taskId] = {
         ...parsedJson.tasks[taskId],
-        timestamps: parsedJson.tasks[taskId].timestamps.map(parse)
+        timestamps: parsedJson.tasks[taskId].timestamps.map(toDate)
       };
       return tasks;
     }, {})

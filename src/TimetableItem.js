@@ -5,6 +5,7 @@ import glamorous, { Div } from 'glamorous';
 import { formatName } from './formatters';
 import Counter from './Counter';
 import Button from './Button';
+import ClickOutside from './ClickOutside';
 import type { AggregatedTimetableItem } from './TypeDefinitions';
 
 const ListItem = glamorous.div(
@@ -91,12 +92,16 @@ class TimetableItem extends React.PureComponent<Props, State> {
               {formatName(item.task)}
             </span>
           ) : (
-            <input
-              ref={ref => (this.inputRef = ref)}
-              value={item.task}
-              onKeyDown={this.handleKeyDown}
-              onChange={e => onNameChange(e.target.value)}
-            />
+            <ClickOutside
+              onClickOutside={() => this.setState({ editing: false })}
+            >
+              <input
+                ref={ref => (this.inputRef = ref)}
+                value={item.task}
+                onKeyDown={this.handleKeyDown}
+                onChange={e => onNameChange(e.target.value)}
+              />
+            </ClickOutside>
           )}
         </Div>
 

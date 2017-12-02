@@ -166,12 +166,13 @@ class App extends ReducerComponent<Props, State, Action> {
   };
 
   componentDidMount() {
-    window.onbeforeunload = () => this.actions.onFinishClicked();
+    window.onbeforeunload = () => {
+      this.actions.onFinishClicked();
+      this.props.saveState(this.state);
+    };
   }
 
-  componentDidUpdate() {
-    this.props.saveState(this.state);
-  }
+  componentDidUpdate() {}
 
   handleClear = () => {
     this.dispatch({ type: 'CLEAR_STATE' });
