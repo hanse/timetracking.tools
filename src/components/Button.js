@@ -15,16 +15,23 @@ const hoverColor = backgroundColor => {
   };
 };
 
-function variant(color) {
+function makeVariant(backgroundColor: string, textColor: string) {
   return {
-    ...hoverColor(color),
-    borderColor: darken(0.08, color)
+    ...hoverColor(backgroundColor),
+    borderColor: darken(0.08, backgroundColor),
+    color: textColor
   };
 }
 
+const VARIANTS = {
+  red: ['#FF4136', '#FFF'],
+  green: ['#3D9970', '#FFF'],
+  teal: ['#39CCCC', '#001f3f'],
+  silver: ['#DDD', '#444']
+};
+
 const Button = glamorous.button(
   {
-    fontSize: 'inherit',
     border: 0,
     outline: 0,
     cursor: 'pointer',
@@ -32,20 +39,23 @@ const Button = glamorous.button(
     display: 'block',
     borderRadius: 4,
     borderWidth: 1,
-    borderBottomWidth: 2,
     borderStyle: 'solid',
-    boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)',
+    textTransform: 'uppercase',
+    fontSize: 16,
+    fontWeight: 500,
+    boxShadow: '0 1px 2px 0 rgba(0,0,0,0.1)',
     color: '#fff',
-    ...variant('#3D9970'),
+    ...makeVariant(...VARIANTS.silver),
     ':active': {
       transform: 'translateY(1px)'
     }
   },
-  propStyles({
-    dark: variant('#3D9970'),
-    light: variant('#FF4136'),
-    neutral: variant('#ddd')
-  })
+  propStyles(
+    Object.keys(VARIANTS).reduce((styles, variant) => {
+      styles[variant] = makeVariant(...VARIANTS[variant]);
+      return styles;
+    }, {})
+  )
 );
 
 export default Button;

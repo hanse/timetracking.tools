@@ -25,20 +25,12 @@ const ListItem = glamorous.div(
   })
 );
 
-const Bubble = glamorous.div({
-  padding: '6px 10px',
-  borderRadius: 5,
-  backgroundColor: '#ddd',
-  marginLeft: 10,
-  width: 100,
-  textAlign: 'center'
-});
-
 type Props = {
   formatDuration: (value: number) => string,
   item: AggregatedTimetableItem,
   isActive: boolean,
   onMakeActiveClick: () => void,
+  onPauseClick: () => void,
   onNameChange: (name: string) => void
 };
 
@@ -75,6 +67,7 @@ class TimetableItem extends React.PureComponent<Props, State> {
       item,
       formatDuration,
       isActive,
+      onPauseClick,
       onMakeActiveClick,
       onNameChange
     } = this.props;
@@ -105,20 +98,28 @@ class TimetableItem extends React.PureComponent<Props, State> {
           )}
         </Div>
 
-        <Div display="flex">
-          {!isActive && (
-            <Button onClick={onMakeActiveClick}>Work on this instead</Button>
-          )}
-
-          <Bubble>
-            <Counter
-              initialDuration={item.duration}
-              startTime={startTime}
-              active={isActive}
-              format={value => <span>{formatDuration(value)}</span>}
-            />
-          </Bubble>
-        </Div>
+        <Button
+          green={isActive}
+          css={{
+            padding: 10,
+            width: 100,
+            marginLeft: 5,
+            fontWeight: isActive ? '700' : '400'
+          }}
+          onClick={isActive ? onPauseClick : onMakeActiveClick}
+          title={
+            isActive
+              ? 'Click to take a pause from this task'
+              : 'Work on this task instead'
+          }
+        >
+          <Counter
+            initialDuration={item.duration}
+            startTime={startTime}
+            active={isActive}
+            format={value => <span>{formatDuration(value)}</span>}
+          />
+        </Button>
       </ListItem>
     );
   }

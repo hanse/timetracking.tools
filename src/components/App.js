@@ -231,6 +231,7 @@ class App extends ReducerComponent<Props, State, Action> {
                   formatDuration={formatDuration}
                   onNameChange={this.actions.onTaskNameChanged(item)}
                   onMakeActiveClick={this.actions.onMakeActiveClicked(item)}
+                  onPauseClick={this.actions.onFinishClicked}
                 />
               ))}
 
@@ -244,14 +245,14 @@ class App extends ReducerComponent<Props, State, Action> {
               >
                 <AddTaskForm onSubmit={this.actions.onTaskAdded} />
 
-                <Button light onClick={this.actions.onFinishClicked}>
+                <Button red onClick={this.actions.onFinishClicked}>
                   I am going home
                 </Button>
               </Div>
 
               <Button
                 neutral
-                css={{ marginTop: 20, padding: '7px 15px', color: '#666' }}
+                css={{ marginTop: 20, padding: '7px 15px' }}
                 onClick={this.handleClear}
               >
                 Clear State

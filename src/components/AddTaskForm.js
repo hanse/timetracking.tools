@@ -26,7 +26,7 @@ const AddTaskForm = ({ onSubmit }: Props) => {
         placeholder="What did you just start on?"
       />
 
-      <Button type="submit" style={{ marginLeft: 5 }}>
+      <Button type="submit" style={{ marginLeft: 5 }} green>
         Start
       </Button>
     </form>
