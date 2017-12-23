@@ -16,7 +16,7 @@ type State = {
 
 class Counter extends React.PureComponent<Props, State> {
   static defaultProps = {
-    format: n => n,
+    format: (n: number) => n,
     startTime: new Date()
   };
 

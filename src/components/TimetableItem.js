@@ -2,11 +2,11 @@
 
 import React from 'react';
 import glamorous, { Div } from 'glamorous';
-import { formatName } from './formatters';
+import { formatName } from '../formatters';
 import Counter from './Counter';
 import Button from './Button';
 import ClickOutside from './ClickOutside';
-import type { AggregatedTimetableItem } from './TypeDefinitions';
+import type { AggregatedTimetableItem } from '../TypeDefinitions';
 
 const ListItem = glamorous.div(
   {

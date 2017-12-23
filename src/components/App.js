@@ -5,11 +5,11 @@ import cuid from 'cuid';
 import { Div } from 'glamorous';
 import ReducerComponent from './ReducerComponent';
 import TimetableItem from './TimetableItem';
-import { formatName, formatTime, formatHalfHours } from './formatters';
-import aggregateTimetable, { aggregateCSV } from './aggregateTimetable';
+import { formatName, formatTime, formatHalfHours } from '../formatters';
+import aggregateTimetable, { aggregateCSV } from '../aggregateTimetable';
 import Button from './Button';
 import AddTaskForm from './AddTaskForm';
-import type { Database, ID, AggregatedTimetableItem } from './TypeDefinitions';
+import type { Database, ID, AggregatedTimetableItem } from '../TypeDefinitions';
 
 type State = {
   active: ?ID,

@@ -5,7 +5,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import toDate from 'date-fns/toDate';
 import { css } from 'glamor';
-import App from './App';
+import App from './components/App';
 
 css.insert(`
   body {

@@ -1,3 +1,5 @@
+// @flow
+
 import glamorous from 'glamorous';
 import propStyles from 'prop-styles';
 import { lighten } from 'polished';

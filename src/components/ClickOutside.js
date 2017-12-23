@@ -1,6 +1,14 @@
+// @flow
+
 import React, { Component } from 'react';
 
-class ClickOutside extends Component {
+type Props = {
+  onClickOutside: () => mixed
+};
+
+class ClickOutside extends Component<Props> {
+  container: ?HTMLDivElement;
+
   componentDidMount() {
     document.addEventListener('click', this.handleClick, true);
   }
@@ -9,8 +17,9 @@ class ClickOutside extends Component {
     document.removeEventListener('click', this.handleClick, true);
   }
 
-  handleClick = e => {
-    if (this.container && !this.container.contains(e.target)) {
+  handleClick = (e: MouseEvent) => {
+    const target: Node = (e.target: any);
+    if (this.container && !this.container.contains(target)) {
       this.props.onClickOutside();
     }
   };

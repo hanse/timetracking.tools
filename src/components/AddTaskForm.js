@@ -1,7 +1,13 @@
+// @flow
+
 import React from 'react';
 import Button from './Button';
 
-const AddTaskForm = ({ onSubmit }) => {
+type Props = {
+  onSubmit: string => mixed
+};
+
+const AddTaskForm = ({ onSubmit }: Props) => {
   let input;
 
   const handleSubmit = (e: SyntheticEvent<*>) => {
