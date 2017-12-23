@@ -86,7 +86,8 @@ function reducer(state: State = initialState, action: Action) {
     case 'NEW_TASK': {
       const taskName = action.task;
       const existingId = Object.keys(state.tasks).find(
-        taskId => state.tasks[taskId].name === taskName
+        taskId =>
+          state.tasks[taskId].name.toLowerCase() === taskName.toLowerCase()
       );
       const id = existingId ? existingId : action.id;
       return {
@@ -267,7 +268,6 @@ class App extends ReducerComponent<Props, State, Action> {
 
           <Div flex={1} overflowY="scroll" fontSize={14} padding={20}>
             <pre>{JSON.stringify(aggregateCSV(tasks), null, 2)}</pre>
-            <pre>{JSON.stringify(tasks, null, 2)}</pre>
           </Div>
         </Div>
       </Div>
