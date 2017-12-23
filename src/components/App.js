@@ -2,7 +2,7 @@
 
 import React from 'react';
 import cuid from 'cuid';
-import { Div } from 'glamorous';
+import { Div, Label } from 'glamorous';
 import ReducerComponent from './ReducerComponent';
 import TimetableItem from './TimetableItem';
 import { formatName, formatTime, formatHalfHours } from '../formatters';
@@ -213,14 +213,19 @@ class App extends ReducerComponent<Props, State, Action> {
                   Currently working on {formatName(activeTask.name)}
                 </strong>
 
-                <label>
+                <Label
+                  color="#888"
+                  display="flex"
+                  alignItems="center"
+                  fontSize={14}
+                >
                   <input
                     type="checkbox"
                     checked={!exact}
                     onChange={this.actions.onToggleExact}
                   />
                   Show half hours
-                </label>
+                </Label>
               </Div>
 
               {aggregateTimetable(tasks).map((item, index) => (
