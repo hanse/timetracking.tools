@@ -2,14 +2,25 @@
 
 import glamorous from 'glamorous';
 import propStyles from 'prop-styles';
-import { lighten } from 'polished';
+import { lighten, darken } from 'polished';
 
-const hoverColor = backgroundColor => ({
-  backgroundColor,
-  ':hover': {
-    backgroundColor: lighten(0.05, backgroundColor)
-  }
-});
+const gradient = color => `linear-gradient(${color}, ${darken(0.05, color)})`;
+
+const hoverColor = backgroundColor => {
+  return {
+    background: gradient(backgroundColor),
+    ':hover': {
+      background: gradient(lighten(0.05, backgroundColor))
+    }
+  };
+};
+
+function variant(color) {
+  return {
+    ...hoverColor(color),
+    borderColor: darken(0.08, color)
+  };
+}
 
 const Button = glamorous.button(
   {
@@ -19,14 +30,21 @@ const Button = glamorous.button(
     cursor: 'pointer',
     padding: '0 10px',
     display: 'block',
-    borderRadius: '3px',
+    borderRadius: 4,
+    borderWidth: 1,
+    borderBottomWidth: 2,
+    borderStyle: 'solid',
+    boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)',
     color: '#fff',
-    ...hoverColor('rgba(0, 203, 169, 1)')
+    ...variant('#3D9970'),
+    ':active': {
+      transform: 'translateY(1px)'
+    }
   },
   propStyles({
-    dark: hoverColor('rgba(0, 203, 169, 1)'),
-    light: hoverColor('rgba(255, 48, 85, 1)'),
-    neutral: hoverColor('#ddd')
+    dark: variant('#3D9970'),
+    light: variant('#FF4136'),
+    neutral: variant('#ddd')
   })
 );
 

@@ -1,6 +1,5 @@
 // @flow
 
-import 'glamor/reset';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import toDate from 'date-fns/toDate';
@@ -8,6 +7,13 @@ import { css } from 'glamor';
 import App from './components/App';
 
 css.insert(`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+  }
+
   body {
     font-size: 20px;
     line-height: 2;

@@ -27,7 +27,7 @@ const AddTaskForm = ({ onSubmit }: Props) => {
       />
 
       <Button type="submit" style={{ marginLeft: 5 }}>
-        Go
+        Start
       </Button>
     </form>
   );

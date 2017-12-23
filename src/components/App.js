@@ -8,6 +8,7 @@ import TimetableItem from './TimetableItem';
 import { formatName, formatTime, formatHalfHours } from '../formatters';
 import aggregateTimetable, { aggregateCSV } from '../aggregateTimetable';
 import Button from './Button';
+import Header from './Header';
 import AddTaskForm from './AddTaskForm';
 import type { Database, ID, AggregatedTimetableItem } from '../TypeDefinitions';
 
@@ -186,71 +187,82 @@ class App extends ReducerComponent<Props, State, Action> {
     const activeTask = active ? tasks[active] : {};
 
     return (
-      <Div display="flex">
-        <Div flex={1} height="100vh" padding={40}>
-          <h1>Timetracker</h1>
-          <Div
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <strong>Currently working on {formatName(activeTask.name)}</strong>
+      <Div
+        display="flex"
+        flexDirection="column"
+        height="100vh"
+        backgroundColor="#f2efef"
+      >
+        <Header />
+        <Div display="flex" flex={1}>
+          <Div flex={1} overflowY="auto" padding={20}>
+            <Div
+              border="1px solid #DAE1E9"
+              borderRadius={4}
+              padding={20}
+              backgroundColor="#fff"
+              boxShadow="0 1px 2px 0 rgba(0,0,0,0.05)"
+            >
+              <Div
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <strong>
+                  Currently working on {formatName(activeTask.name)}
+                </strong>
 
-            <label>
-              <input
-                type="checkbox"
-                checked={!exact}
-                onChange={this.actions.onToggleExact}
-              />
-              Show half hours
-            </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={!exact}
+                    onChange={this.actions.onToggleExact}
+                  />
+                  Show half hours
+                </label>
+              </Div>
+
+              {aggregateTimetable(tasks).map((item, index) => (
+                <TimetableItem
+                  key={item.id}
+                  item={item}
+                  isActive={item.id === active}
+                  formatDuration={formatDuration}
+                  onNameChange={this.actions.onTaskNameChanged(item)}
+                  onMakeActiveClick={this.actions.onMakeActiveClicked(item)}
+                />
+              ))}
+
+              <Div
+                display="flex"
+                justifyContent="space-between"
+                padding={20}
+                backgroundColor="#F4F3F4"
+                marginTop={20}
+                borderRadius={3}
+              >
+                <AddTaskForm onSubmit={this.actions.onTaskAdded} />
+
+                <Button light onClick={this.actions.onFinishClicked}>
+                  I am going home
+                </Button>
+              </Div>
+
+              <Button
+                neutral
+                css={{ marginTop: 20, padding: '7px 15px', color: '#666' }}
+                onClick={this.handleClear}
+              >
+                Clear State
+              </Button>
+            </Div>
           </Div>
 
-          {aggregateTimetable(tasks).map((item, index) => (
-            <TimetableItem
-              key={item.id}
-              item={item}
-              isActive={item.id === active}
-              formatDuration={formatDuration}
-              onNameChange={this.actions.onTaskNameChanged(item)}
-              onMakeActiveClick={this.actions.onMakeActiveClicked(item)}
-            />
-          ))}
-
-          <Div
-            display="flex"
-            justifyContent="space-between"
-            padding={20}
-            backgroundColor="#F4F3F4"
-            marginTop={20}
-            borderRadius={3}
-          >
-            <AddTaskForm onSubmit={this.actions.onTaskAdded} />
-
-            <Button light onClick={this.actions.onFinishClicked}>
-              I am going home
-            </Button>
+          <Div flex={1} overflowY="scroll" fontSize={14} padding={20}>
+            <pre>{JSON.stringify(aggregateCSV(tasks), null, 2)}</pre>
+            <pre>{JSON.stringify(tasks, null, 2)}</pre>
           </Div>
-
-          <Button
-            neutral
-            css={{ marginTop: 20, padding: '7px 15px', color: '#666' }}
-            onClick={this.handleClear}
-          >
-            Clear State
-          </Button>
-        </Div>
-
-        <Div
-          flex={1}
-          height="100vh"
-          padding={40}
-          overflow="scroll"
-          fontSize={14}
-        >
-          <pre>{JSON.stringify(aggregateCSV(tasks), null, 2)}</pre>
-          <pre>{JSON.stringify(tasks, null, 2)}</pre>
         </Div>
       </Div>
     );
