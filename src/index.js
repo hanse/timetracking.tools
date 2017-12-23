@@ -13,14 +13,18 @@ css.insert(`
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
   }
+`);
 
+css.insert(`
   body {
     font-size: 20px;
     line-height: 2;
     font-family: system-ui, sans-serif;
     color: #333;
   }
+`);
 
+css.insert(`
   input {
     font-size: inherit;
     padding: 10px 15px;
@@ -28,11 +32,14 @@ css.insert(`
     border: 1px solid #ccc;
     min-width: 320px;
   }
+`);
 
+css.insert(`
   input[type='checkbox'] {
     margin-right: 10px;
-  }
+  }`);
 
+css.insert(`
   label {
     cursor: pointer;
   }
