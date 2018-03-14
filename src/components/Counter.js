@@ -25,7 +25,7 @@ class Counter extends React.PureComponent<Props, State> {
     accumulatedDuration: this.props.initialDuration
   };
 
-  counter: number;
+  counter: IntervalID;
 
   componentDidMount() {
     if (this.props.active) {
