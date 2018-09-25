@@ -13,6 +13,13 @@ export type AggregatedTimetableItem = {|
 
 export type AggregatedTimetable = Array<AggregatedTimetableItem>;
 
+export type AggregatedCSVItem = {|
+  task: string,
+  daily: { [key: string]: number }
+|};
+
+export type AggregatedCSV = Array<AggregatedCSVItem>;
+
 export type Task = {|
   id: string,
   name: string,

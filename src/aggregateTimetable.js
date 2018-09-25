@@ -1,7 +1,11 @@
 // @flow
 
-import format from 'date-fns/fp/format';
-import type { Database, AggregatedTimetable } from './TypeDefinitions';
+import format from "date-fns/fp/format";
+import type {
+  Database,
+  AggregatedTimetable,
+  AggregatedCSV
+} from "./TypeDefinitions";
 
 const chunks = (array, size) => {
   return array.reduce((acc, item, index) => {
@@ -44,9 +48,9 @@ const groupBy = group => collection => {
   }, {});
 };
 
-export function aggregateCSV(timetable: Database) {
+export function aggregateCSV(timetable: Database): AggregatedCSV {
   return Object.keys(timetable).map(task => {
-    let timestampsByDate = groupBy(format('YYYY-MM-DD'))(
+    let timestampsByDate = groupBy(format("YYYY-MM-DD"))(
       timetable[task].timestamps
     );
 
