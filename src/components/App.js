@@ -3,6 +3,7 @@
 import React from 'react';
 import cuid from 'cuid';
 import { Div, Label } from 'glamorous';
+import { produce } from 'immer';
 import ReducerComponent from './ReducerComponent';
 import TimetableItem from './TimetableItem';
 import { formatName, formatTime, formatHalfHours } from '../formatters';
@@ -54,88 +55,59 @@ const initialState = {
   tasks: {}
 };
 
-function reducer(state: State = initialState, action: Action) {
-  switch (action.type) {
-    case 'TOGGLE_EXACT':
-      return {
-        ...state,
-        exact: !state.exact
-      };
+const reducer = (state: State = initialState, action: Action) =>
+  produce(state, draft => {
+    switch (action.type) {
+      case 'TOGGLE_EXACT':
+        draft.exact = !state.exact;
+        return;
 
-    case 'FINISH':
-      return {
-        ...state,
-        tasks: {
-          ...state.tasks,
-          ...(state.active &&
+      case 'FINISH':
+        if (
+          state.active &&
           state.tasks[state.active].timestamps.length % 2 === 1
-            ? {
-                [state.active]: {
-                  ...state.tasks[state.active],
-                  timestamps: [
-                    ...(state.tasks[state.active].timestamps || []),
-                    action.date
-                  ]
-                }
-              }
-            : {})
-        },
-        active: null
-      };
-
-    case 'NEW_TASK': {
-      const taskName = action.task;
-      const existingId = Object.keys(state.tasks).find(
-        taskId =>
-          state.tasks[taskId].name.toLowerCase() === taskName.toLowerCase()
-      );
-      const id = existingId ? existingId : action.id;
-      return {
-        ...state,
-        tasks: {
-          ...state.tasks,
-          ...(state.active
-            ? {
-                [state.active]: {
-                  ...state.tasks[state.active],
-                  timestamps: [
-                    ...(state.tasks[state.active].timestamps || []),
-                    action.date
-                  ]
-                }
-              }
-            : {}),
-          [id]: {
-            name: action.task,
-            timestamps: [
-              ...((state.tasks[id] || {}).timestamps || []),
-              action.date
-            ]
-          }
-        },
-        active: id
-      };
-    }
-
-    case 'CHANGE_NAME':
-      return {
-        ...state,
-        tasks: {
-          ...state.tasks,
-          [action.id]: {
-            ...state.tasks[action.id],
-            name: action.name
-          }
+        ) {
+          draft.tasks[state.active].timestamps.push(action.date);
         }
-      };
+        draft.active = null;
+        return;
 
-    case 'CLEAR_STATE':
-      return initialState;
+      case 'NEW_TASK':
+        const taskName = action.task;
+        const existingId = Object.keys(state.tasks).find(
+          taskId =>
+            state.tasks[taskId].name.toLowerCase() === taskName.toLowerCase()
+        );
 
-    default:
-      return state;
-  }
-}
+        const id = existingId ? existingId : action.id;
+
+        draft.active = id;
+        if (state.active) {
+          draft.tasks[state.active].timestamps.push(action.date);
+        }
+
+        draft.tasks[id] = {
+          id: id,
+          name: action.task,
+          timestamps: [
+            ...((state.tasks[id] || {}).timestamps || []),
+            action.date
+          ]
+        };
+        return;
+
+      case 'CHANGE_NAME':
+        draft.tasks[action.id].name = action.name;
+        return;
+
+      case 'CLEAR_STATE':
+        draft = initialState;
+        return;
+
+      default:
+        return state;
+    }
+  });
 
 class App extends ReducerComponent<Props, State, Action> {
   reducer = reducer;
