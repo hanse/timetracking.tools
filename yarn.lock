@@ -3424,9 +3424,9 @@ flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
 
-flow-bin@^0.81.0:
-  version "0.81.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.81.0.tgz#7f0a733dce1dad3cb1447c692639292dc3d60bf5"
+flow-bin@^0.82.0:
+  version "0.82.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.82.0.tgz#fbec84c0d6cab7877565eca8214d655f3aefb8db"
 
 flush-write-stream@^1.0.0:
   version "1.0.3"
@@ -6132,9 +6132,9 @@ pnp-webpack-plugin@1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/pnp-webpack-plugin/-/pnp-webpack-plugin-1.1.0.tgz#947a96d1db94bb5a1fc014d83b581e428699ac8c"
 
-polished@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/polished/-/polished-2.1.1.tgz#767bd417b9df3fa317bc0f3935d1d6b4cb182235"
+polished@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/polished/-/polished-2.2.0.tgz#5ca7e178cc5352bd7fd1efc45342f7c6d59cc982"
   dependencies:
     "@babel/runtime" "^7.0.0"
 
