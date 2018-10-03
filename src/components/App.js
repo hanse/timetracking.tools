@@ -101,7 +101,9 @@ const reducer = (state: State = initialState, action: Action) =>
         return;
 
       case 'CLEAR_STATE':
-        draft = initialState;
+        draft.tasks = {};
+        draft.exact = true;
+        draft.active = null;
         return;
 
       default:
