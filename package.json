@@ -13,7 +13,7 @@
     "prop-styles": "^2.0.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "react-scripts": "^1.1.5"
+    "react-scripts": "^2.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -26,5 +26,11 @@
   },
   "prettier": {
     "singleQuote": true
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
