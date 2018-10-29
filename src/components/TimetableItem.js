@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import glamorous, { Div } from 'glamorous';
 import { formatName } from '../formatters';
 import Counter from './Counter';
@@ -34,95 +34,83 @@ type Props = {
   onNameChange: (name: string) => void
 };
 
-type State = {
-  editing: boolean
-};
+function TimetableItem(props: Props) {
+  const [editing, setEditing] = useState(false);
+  const inputRef = useRef();
 
-class TimetableItem extends React.PureComponent<Props, State> {
-  state = {
-    editing: false
-  };
-
-  inputRef: ?HTMLInputElement;
-
-  componentDidUpdate(prevProps: Props, prevState: State) {
-    if (this.state.editing && !prevState.editing) {
-      this.inputRef && this.inputRef.focus();
-      this.inputRef &&
-        this.inputRef.setSelectionRange(
-          this.props.item.task.length,
-          this.props.item.task.length + 1
+  useEffect(
+    () => {
+      inputRef.current && inputRef.current.focus();
+      inputRef.current &&
+        inputRef.current.setSelectionRange(
+          props.item.task.length,
+          props.item.task.length + 1
         );
-    }
-  }
+    },
+    [editing]
+  );
 
-  handleKeyDown = (e: SyntheticKeyboardEvent<*>) => {
+  const handleKeyDown = (e: SyntheticKeyboardEvent<*>) => {
     if (e.which === 27 || e.which === 13) {
-      this.setState({ editing: false });
+      setEditing(false);
     }
   };
 
-  render() {
-    const {
-      item,
-      formatDuration,
-      isActive,
-      onPauseClick,
-      onMakeActiveClick,
-      onNameChange
-    } = this.props;
+  const {
+    item,
+    formatDuration,
+    isActive,
+    onPauseClick,
+    onMakeActiveClick,
+    onNameChange
+  } = props;
 
-    const startTime =
-      item.timestamps.length % 2 === 1
-        ? item.timestamps[item.timestamps.length - 1]
-        : new Date();
+  const startTime =
+    item.timestamps.length % 2 === 1
+      ? item.timestamps[item.timestamps.length - 1]
+      : new Date();
 
-    return (
-      <ListItem isActive={isActive}>
-        <Div flex={1}>
-          {!this.state.editing ? (
-            <span onClick={() => this.setState({ editing: true })}>
-              {formatName(item.task)}
-            </span>
-          ) : (
-            <ClickOutside
-              onClickOutside={() => this.setState({ editing: false })}
-            >
-              <input
-                ref={ref => (this.inputRef = ref)}
-                value={item.task}
-                onKeyDown={this.handleKeyDown}
-                onChange={e => onNameChange(e.target.value)}
-              />
-            </ClickOutside>
-          )}
-        </Div>
+  return (
+    <ListItem isActive={isActive}>
+      <Div flex={1}>
+        {!editing ? (
+          <span onClick={() => setEditing(true)}>{formatName(item.task)}</span>
+        ) : (
+          <ClickOutside onClickOutside={() => setEditing(false)}>
+            <input
+              ref={inputRef}
+              value={item.task}
+              onKeyDown={handleKeyDown}
+              onChange={e => onNameChange(e.target.value)}
+            />
+          </ClickOutside>
+        )}
+      </Div>
 
-        <Button
-          green={isActive}
-          css={{
-            padding: 10,
-            width: 100,
-            marginLeft: 5,
-            fontWeight: isActive ? '700' : '400'
-          }}
-          onClick={isActive ? onPauseClick : onMakeActiveClick}
-          title={
-            isActive
-              ? 'Click to take a pause from this task'
-              : 'Work on this task instead'
-          }
-        >
-          <Counter
-            initialDuration={item.duration}
-            startTime={startTime}
-            active={isActive}
-            format={value => <span>{formatDuration(value)}</span>}
-          />
-        </Button>
-      </ListItem>
-    );
-  }
+      <Button
+        green={isActive}
+        css={{
+          padding: 10,
+          width: 100,
+          marginLeft: 5,
+          fontWeight: isActive ? '700' : '400'
+        }}
+        onClick={isActive ? onPauseClick : onMakeActiveClick}
+        title={
+          isActive
+            ? 'Click to take a pause from this task'
+            : 'Work on this task instead'
+        }
+      >
+        <Counter
+          initialDuration={item.duration}
+          startTime={startTime}
+          active={isActive}
+          format={value => <span>{formatDuration(value)}</span>}
+        />
+      </Button>
+    </ListItem>
+  );
 }
 
 export default TimetableItem;

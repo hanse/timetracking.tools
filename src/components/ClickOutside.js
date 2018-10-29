@@ -1,33 +1,28 @@
 // @flow
 
-import React, { Component } from 'react';
+import React, { useRef, useEffect } from 'react';
 
 type Props = {
   onClickOutside: () => mixed
 };
 
-class ClickOutside extends Component<Props> {
-  container: ?HTMLDivElement;
+function ClickOutside(props: Props) {
+  const container = useRef();
 
-  componentDidMount() {
-    document.addEventListener('click', this.handleClick, true);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('click', this.handleClick, true);
-  }
-
-  handleClick = (e: MouseEvent) => {
+  const { onClickOutside, ...restProps } = props;
+  const handleClick = (e: MouseEvent) => {
     const target: Node = (e.target: any);
-    if (this.container && !this.container.contains(target)) {
-      this.props.onClickOutside();
+    if (container.current && !container.current.contains(target)) {
+      onClickOutside();
     }
   };
 
-  render() {
-    const { onClickOutside, ...props } = this.props;
-    return <div ref={ref => (this.container = ref)} {...props} />;
-  }
+  useEffect(() => {
+    document.addEventListener('click', handleClick, true);
+    return () => document.removeEventListener('click', handleClick, true);
+  }, []);
+
+  return <div ref={container} {...restProps} />;
 }
 
 export default ClickOutside;

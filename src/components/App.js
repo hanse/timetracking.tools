@@ -1,10 +1,9 @@
 // @flow
 
-import React from 'react';
+import React, { useReducer, useEffect } from 'react';
 import cuid from 'cuid';
 import { Div, Label } from 'glamorous';
 import { produce } from 'immer';
-import ReducerComponent from './ReducerComponent';
 import TimetableItem from './TimetableItem';
 import { formatName, formatTime, formatHalfHours } from '../formatters';
 import aggregateTimetable, { aggregateCSV } from '../aggregateTimetable';
@@ -111,142 +110,147 @@ const reducer = (state: State = initialState, action: Action) =>
     }
   });
 
-class App extends ReducerComponent<Props, State, Action> {
-  reducer = reducer;
-  state = this.reducer(this.props.initialState || undefined, { type: 'INIT' });
+const onToggleExact = () => ({ type: 'TOGGLE_EXACT' });
 
-  actions = {
-    onToggleExact: () => this.dispatch({ type: 'TOGGLE_EXACT' }),
-    onTaskAdded: (task: string) =>
-      this.dispatch({
-        type: 'NEW_TASK',
-        id: cuid(),
-        task,
-        date: new Date()
-      }),
-    onMakeActiveClicked: (item: AggregatedTimetableItem) => () =>
-      this.dispatch({
-        type: 'NEW_TASK',
-        id: item.id,
-        task: item.task,
-        date: new Date()
-      }),
-    onTaskNameChanged: (item: AggregatedTimetableItem) => (name: string) => {
-      this.dispatch({
-        type: 'CHANGE_NAME',
-        id: item.id,
-        name
-      });
-    },
-    onFinishClicked: () => this.dispatch({ type: 'FINISH', date: new Date() })
-  };
+const onTaskAdded = (task: string) => ({
+  type: 'NEW_TASK',
+  id: cuid(),
+  task,
+  date: new Date()
+});
 
-  componentDidMount() {
+const onMakeActiveClicked = (item: AggregatedTimetableItem) => ({
+  type: 'NEW_TASK',
+  id: item.id,
+  task: item.task,
+  date: new Date()
+});
+
+const onTaskNameChanged = (item: AggregatedTimetableItem) => (
+  name: string
+) => ({
+  type: 'CHANGE_NAME',
+  id: item.id,
+  name
+});
+
+const onFinishClicked = () => ({ type: 'FINISH', date: new Date() });
+
+function useOnBeforeUnload(fn) {
+  useEffect(() => {
     window.onbeforeunload = () => {
-      this.actions.onFinishClicked();
-      this.props.saveState(this.state);
+      fn();
     };
-  }
+    return () => {
+      window.onbeforeunload = null;
+    };
+  });
+}
 
-  componentDidUpdate() {}
+function App(props: Props) {
+  const [state, dispatch] = useReducer(reducer, props.initialState);
 
-  handleClear = () => {
-    this.dispatch({ type: 'CLEAR_STATE' });
-    this.props.clearState();
+  useOnBeforeUnload(() => {
+    dispatch(onFinishClicked());
+  });
+
+  useEffect(() => props.saveState(state), [state]);
+
+  const { tasks, exact, active } = state;
+  const formatDuration = exact ? formatTime : formatHalfHours;
+
+  const activeTask = active ? tasks[active] : {};
+
+  const handleClear = () => {
+    dispatch({ type: 'CLEAR_STATE' });
+    props.clearState();
   };
 
-  render() {
-    const { tasks, exact, active } = this.state;
-    const formatDuration = exact ? formatTime : formatHalfHours;
-
-    const activeTask = active ? tasks[active] : {};
-
-    return (
-      <Div
-        display="flex"
-        flexDirection="column"
-        height="100vh"
-        backgroundColor="#f2efef"
-      >
-        <Header />
-        <Div display="flex" flex={1}>
-          <Div flex={1} overflowY="auto" padding={20}>
+  return (
+    <Div
+      display="flex"
+      flexDirection="column"
+      height="100vh"
+      backgroundColor="#f2efef"
+    >
+      <Header />
+      <Div display="flex" flex={1}>
+        <Div flex={1} overflowY="auto" padding={20}>
+          <Div
+            border="1px solid #DAE1E9"
+            borderRadius={4}
+            padding={20}
+            backgroundColor="#fff"
+            boxShadow="0 1px 2px 0 rgba(0,0,0,0.05)"
+          >
             <Div
-              border="1px solid #DAE1E9"
-              borderRadius={4}
-              padding={20}
-              backgroundColor="#fff"
-              boxShadow="0 1px 2px 0 rgba(0,0,0,0.05)"
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="space-between"
             >
-              <Div
+              <strong>
+                Currently working on {formatName(activeTask.name)}
+              </strong>
+
+              <Label
+                color="#888"
                 display="flex"
-                flexDirection="row"
                 alignItems="center"
-                justifyContent="space-between"
+                fontSize={14}
               >
-                <strong>
-                  Currently working on {formatName(activeTask.name)}
-                </strong>
-
-                <Label
-                  color="#888"
-                  display="flex"
-                  alignItems="center"
-                  fontSize={14}
-                >
-                  <input
-                    type="checkbox"
-                    checked={!exact}
-                    onChange={this.actions.onToggleExact}
-                  />
-                  Show half hours
-                </Label>
-              </Div>
-
-              {aggregateTimetable(tasks).map((item, index) => (
-                <TimetableItem
-                  key={item.id}
-                  item={item}
-                  isActive={item.id === active}
-                  formatDuration={formatDuration}
-                  onNameChange={this.actions.onTaskNameChanged(item)}
-                  onMakeActiveClick={this.actions.onMakeActiveClicked(item)}
-                  onPauseClick={this.actions.onFinishClicked}
+                <input
+                  type="checkbox"
+                  checked={!exact}
+                  onChange={() => dispatch(onToggleExact())}
                 />
-              ))}
+                Show half hours
+              </Label>
+            </Div>
 
-              <Div
-                display="flex"
-                justifyContent="space-between"
-                padding={20}
-                backgroundColor="#F4F3F4"
-                marginTop={20}
-                borderRadius={3}
-              >
-                <AddTaskForm onSubmit={this.actions.onTaskAdded} />
+            {aggregateTimetable(tasks).map((item, index) => (
+              <TimetableItem
+                key={item.id}
+                item={item}
+                isActive={item.id === active}
+                formatDuration={formatDuration}
+                onNameChange={name => dispatch(onTaskNameChanged(item)(name))}
+                onMakeActiveClick={() => dispatch(onMakeActiveClicked(item))}
+                onPauseClick={() => dispatch(onFinishClicked())}
+              />
+            ))}
 
-                <Button red onClick={this.actions.onFinishClicked}>
-                  I am going home
-                </Button>
-              </Div>
+            <Div
+              display="flex"
+              justifyContent="space-between"
+              padding={20}
+              backgroundColor="#F4F3F4"
+              marginTop={20}
+              borderRadius={3}
+            >
+              <AddTaskForm onSubmit={task => dispatch(onTaskAdded(task))} />
 
-              <Button
-                neutral
-                css={{ marginTop: 20, padding: '7px 15px' }}
-                onClick={this.handleClear}
-              >
-                Clear State
+              <Button red onClick={() => dispatch(onFinishClicked())}>
+                I am going home
               </Button>
             </Div>
-          </Div>
 
-          <Div flex={1} overflowY="scroll" fontSize={14} padding={20}>
-            <pre>{JSON.stringify(aggregateCSV(tasks), null, 2)}</pre>
+            <Button
+              neutral
+              css={{ marginTop: 20, padding: '7px 15px' }}
+              onClick={handleClear}
+            >
+              Clear State
+            </Button>
           </Div>
         </Div>
+
+        <Div flex={1} overflowY="scroll" fontSize={14} padding={20}>
+          <pre>{JSON.stringify(aggregateCSV(tasks), null, 2)}</pre>
+        </Div>
       </Div>
-    );
-  }
+    </Div>
+  );
 }
 
 export default App;
