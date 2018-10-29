@@ -155,6 +155,10 @@ function App(props: Props) {
   });
 
   useEffect(() => props.saveState(state), [state]);
+  useEffect(() => {
+    const task = state.active ? state.tasks[state.active].name : 'nothing';
+    document.title = `Timetracker: ${task}`;
+  });
 
   const { tasks, exact, active } = state;
   const formatDuration = exact ? formatTime : formatHalfHours;
