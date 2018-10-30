@@ -49,7 +49,7 @@ const rootElement: Element = (document.getElementById('root'): any);
 
 function rehydrateState(parsedJson) {
   if (!parsedJson) {
-    return null;
+    return undefined;
   }
 
   return {

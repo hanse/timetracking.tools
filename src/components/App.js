@@ -148,7 +148,9 @@ function useOnBeforeUnload(fn) {
 }
 
 function App(props: Props) {
-  const [state, dispatch] = useReducer(reducer, props.initialState);
+  const [state, dispatch] = useReducer(reducer, props.initialState, {
+    type: 'INIT'
+  });
 
   useOnBeforeUnload(() => {
     dispatch(onFinishClicked());
