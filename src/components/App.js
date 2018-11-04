@@ -1,5 +1,6 @@
 // @flow
 
+// $FlowFixMe
 import React, { useReducer, useEffect } from 'react';
 import cuid from 'cuid';
 import { Div, Label } from 'glamorous';

@@ -1,5 +1,6 @@
 // @flow
 
+// $FlowFixMe
 import React, { useRef, useEffect } from 'react';
 
 type Props = {

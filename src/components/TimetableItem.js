@@ -1,5 +1,6 @@
 // @flow
 
+// $FlowFixMe
 import React, { useRef, useState, useEffect } from 'react';
 import glamorous, { Div } from 'glamorous';
 import { formatName } from '../formatters';
