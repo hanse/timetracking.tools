@@ -27,7 +27,8 @@ const VARIANTS = {
   red: ['#FF4136', '#FFF'],
   green: ['#3D9970', '#FFF'],
   teal: ['#39CCCC', '#001f3f'],
-  silver: ['#DDD', '#444']
+  silver: ['#DDD', '#444'],
+  plain: ['#ffff', '#6666']
 };
 
 const Button = glamorous.button(

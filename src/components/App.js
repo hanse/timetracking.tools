@@ -11,6 +11,7 @@ import aggregateTimetable, { aggregateCSV } from '../aggregateTimetable';
 import Button from './Button';
 import Header from './Header';
 import AddTaskForm from './AddTaskForm';
+import Navigation from './Navigation';
 import type { Database, ID, AggregatedTimetableItem } from '../types';
 
 type State = {
@@ -22,7 +23,9 @@ type State = {
 type Props = {
   initialState: ?State,
   saveState: State => void,
-  clearState: () => void
+  clearState: () => void,
+  history: any,
+  date: string
 };
 
 type Action =
@@ -190,6 +193,7 @@ function App(props: Props) {
             backgroundColor="#fff"
             boxShadow="0 1px 2px 0 rgba(0,0,0,0.05)"
           >
+            <Navigation history={props.history} date={props.date} />
             <Div
               display="flex"
               flexDirection="row"

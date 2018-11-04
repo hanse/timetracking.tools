@@ -1,10 +1,14 @@
 // @flow
 
-import React from 'react';
+// $FlowFixMe
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import toDate from 'date-fns/toDate';
+import format from 'date-fns/format';
+import createHistory from 'history/createBrowserHistory';
 import { css } from 'glamor';
 import App from './components/App';
+import * as db from './db';
 
 css.insert(`
   * {
@@ -64,15 +68,52 @@ function rehydrateState(parsedJson) {
   };
 }
 
-ReactDOM.render(
-  <App
-    initialState={rehydrateState(
-      JSON.parse(window.localStorage.getItem('timetracker') || 'null')
-    )}
-    saveState={state =>
-      window.localStorage.setItem('timetracker', JSON.stringify(state))
-    }
-    clearState={() => window.localStorage.removeItem('timetracker')}
-  />,
-  rootElement
-);
+function Loader({ date, history }) {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
+
+  useEffect(
+    async () => {
+      setLoading(true);
+      const result = await db.retrieve(date, null);
+      setData((result || {}).tasks);
+      setLoading(false);
+    },
+    [date]
+  );
+
+  if (loading) {
+    return null;
+  }
+
+  return (
+    <App
+      date={date}
+      initialState={rehydrateState(data)}
+      saveState={state => db.save(date, state)}
+      clearState={() => {}}
+      history={history}
+    />
+  );
+}
+
+const getDate = location => {
+  if (location.pathname !== '/') {
+    return location.pathname.replace(/^\/|\/$/g, '');
+  }
+
+  return format(new Date(), 'YYYY-MM-dd');
+};
+
+const render = history => {
+  const date = getDate(history.location);
+  ReactDOM.render(<Loader date={date} history={history} />, rootElement);
+};
+
+const history = createHistory();
+
+history.listen(() => {
+  render(history);
+});
+
+render(history);
