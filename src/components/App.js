@@ -1,7 +1,7 @@
 // @flow
 
 // $FlowFixMe
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useState } from 'react';
 import cuid from 'cuid';
 import { Div, Label } from 'glamorous';
 import { produce } from 'immer';
@@ -156,6 +156,8 @@ function App(props: Props) {
     type: 'INIT'
   });
 
+  const [debug, setDebug] = useState(false);
+
   useOnBeforeUnload(() => {
     dispatch(onFinishClicked());
   });
@@ -257,7 +259,8 @@ function App(props: Props) {
         </Div>
 
         <Div flex={1} overflowY="scroll" fontSize={14} padding={20}>
-          <pre>{JSON.stringify(aggregateCSV(tasks), null, 2)}</pre>
+          <Button onClick={() => setDebug(!debug)}>Show JSON</Button>
+          {debug && <pre>{JSON.stringify(aggregateCSV(tasks), null, 2)}</pre>}
         </Div>
       </Div>
     </Div>
