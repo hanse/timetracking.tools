@@ -11,7 +11,7 @@ import aggregateTimetable, { aggregateCSV } from '../aggregateTimetable';
 import Button from './Button';
 import Header from './Header';
 import AddTaskForm from './AddTaskForm';
-import type { Database, ID, AggregatedTimetableItem } from '../TypeDefinitions';
+import type { Database, ID, AggregatedTimetableItem } from '../types';
 
 type State = {
   active: ?ID,

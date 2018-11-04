@@ -7,7 +7,7 @@ import { formatName } from '../formatters';
 import Counter from './Counter';
 import Button from './Button';
 import ClickOutside from './ClickOutside';
-import type { AggregatedTimetableItem } from '../TypeDefinitions';
+import type { AggregatedTimetableItem } from '../types';
 
 const ListItem = glamorous.div(
   {

@@ -5,7 +5,7 @@ import type {
   Database,
   AggregatedTimetable,
   AggregatedCSV
-} from './TypeDefinitions';
+} from './types';
 
 const chunks = (array, size) => {
   return array.reduce((acc, item, index) => {
