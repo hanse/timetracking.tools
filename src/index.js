@@ -34,6 +34,11 @@ css.insert(`
     padding: 10px 15px;
     border-radius: 3px;
     border: 1px solid #ccc;
+  }
+`);
+
+css.insert(`
+  input[type=text] {
     min-width: 320px;
   }
 `);

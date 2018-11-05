@@ -44,7 +44,8 @@ const styles = {
     border: 0,
     fontSize: 18,
     cursor: 'pointer',
-    color: '#666'
+    color: '#666',
+    background: 'transparent'
   }
 };
 
