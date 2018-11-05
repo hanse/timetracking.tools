@@ -16,7 +16,7 @@ function Navigation({ date, history }: Props) {
   const parsedDate = toDate(date);
 
   const handleChange = offset => () => {
-    history.push(format(addDays(parsedDate, offset), 'YYYY-MM-dd'));
+    history.push('/' + format(addDays(parsedDate, offset), 'YYYY-MM-dd'));
   };
 
   return (
