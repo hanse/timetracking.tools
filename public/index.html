@@ -1,19 +1,38 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="theme-color" content="#000000">
 
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#000000">
 
-    <title>Timetracker</title>
-  </head>
-  <body>
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
-    <div id="root"></div>
-  </body>
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Hanse" />
+  <meta name="twitter:title" content="timetracking.tools" />
+  <meta name="twitter:description" content="Effortless day-to-day time tracking" />
+  <meta name="twitter:image" content="%PUBLIC_URL%/twitter.png" />
+
+  <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+
+  <title>Timetracker</title>
+</head>
+
+<body>
+  <noscript>
+    You need to enable JavaScript to run this app. Find more apps on <a href="https://koren.im">https://koren.im</a>
+  </noscript>
+  <div id="root"></div>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-17229082-10"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-17229082-10');
+  </script>
+</body>
+
 </html>
