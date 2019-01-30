@@ -2,10 +2,10 @@
 
 import React, { useReducer, useEffect } from 'react';
 import cuid from 'cuid';
-import { Div, Label } from 'glamorous';
+import { Div } from 'glamorous';
 import { produce } from 'immer';
 import TimetableItem from './TimetableItem';
-import { formatName, formatTime, formatHalfHours } from '../formatters';
+import { formatTime, formatHalfHours } from '../formatters';
 import aggregateTimetable from '../aggregateTimetable';
 import Button from './Button';
 import Header from './Header';
@@ -113,7 +113,7 @@ const reducer = (state: State, action: Action) =>
     }
   });
 
-const onToggleExact = () => ({ type: 'TOGGLE_EXACT' });
+// const onToggleExact = () => ({ type: 'TOGGLE_EXACT' });
 
 const onTaskAdded = (task: string) => ({
   type: 'NEW_TASK',
@@ -177,8 +177,6 @@ function App(props: Props) {
   const { tasks, exact, active } = state;
   const formatDuration = exact ? formatTime : formatHalfHours;
 
-  const activeTask = active ? tasks[active] : {};
-
   const handleClear = () => {
     dispatch({ type: 'CLEAR_STATE' });
     props.clearState();
@@ -186,47 +184,18 @@ function App(props: Props) {
 
   return (
     <Div
+      padding={30}
+      maxWidth={960}
+      margin="0 auto"
       display="flex"
       flexDirection="column"
-      height="100vh"
-      backgroundColor="#f2efef"
+      justifyContent="space-between"
     >
       <Header />
-      <Div display="flex" flex={1}>
-        <Div flex={1} overflowY="auto" padding={20}>
-          <Div
-            border="1px solid #DAE1E9"
-            borderRadius={4}
-            padding={20}
-            backgroundColor="#fff"
-            boxShadow="0 1px 2px 0 rgba(0,0,0,0.05)"
-            maxWidth={960}
-          >
+      <Div display="flex" flex={1} minHeight="60vh">
+        <Div flex={1} overflowY="auto">
+          <Div>
             <Navigation history={props.history} date={props.date} />
-            <Div
-              display="flex"
-              flexDirection="row"
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <strong>
-                Currently working on {formatName(activeTask.name)}
-              </strong>
-
-              <Label
-                color="#888"
-                display="flex"
-                alignItems="center"
-                fontSize={14}
-              >
-                <input
-                  type="checkbox"
-                  checked={!exact}
-                  onChange={() => dispatch(onToggleExact())}
-                />
-                Show half hours
-              </Label>
-            </Div>
 
             {aggregateTimetable(tasks).map((item, index) => (
               <TimetableItem
@@ -243,28 +212,21 @@ function App(props: Props) {
             <Div
               display="flex"
               justifyContent="space-between"
-              padding={20}
-              backgroundColor="#F4F3F4"
-              marginTop={20}
-              borderRadius={3}
+              marginTop={60}
+              borderRadius={4}
             >
               <AddTaskForm onSubmit={task => dispatch(onTaskAdded(task))} />
-
-              <Button red onClick={() => dispatch(onFinishClicked())}>
-                I am going home
-              </Button>
             </Div>
-
-            <Button
-              neutral
-              css={{ marginTop: 20, padding: '7px 15px' }}
-              onClick={handleClear}
-            >
-              Clear State
-            </Button>
           </Div>
         </Div>
       </Div>
+
+      <Button
+        css={{ marginTop: 20, padding: '7px 15px' }}
+        onClick={handleClear}
+      >
+        Delete Everything
+      </Button>
     </Div>
   );
 }

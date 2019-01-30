@@ -21,13 +21,19 @@ function Navigation({ date, history }: Props) {
 
   return (
     <div style={styles.navigation}>
-      <button style={styles.button} onClick={handleChange(-1)}>
-        &larr; Previous
-      </button>
       <strong>{format(parsedDate, FORMAT)}</strong>
-      <button style={styles.button} onClick={handleChange(1)}>
-        Next &rarr;
-      </button>
+      <div>
+        <button
+          style={styles.button}
+          onClick={handleChange(-1)}
+          title="Previous"
+        >
+          &larr;
+        </button>
+        <button style={styles.button} onClick={handleChange(1)} title="Next">
+          &rarr;
+        </button>
+      </div>
     </div>
   );
 }
@@ -36,15 +42,17 @@ const styles = {
   navigation: {
     display: 'flex',
     justifyContent: 'space-between',
-    paddingBottom: 10,
+    padding: 10,
     marginBottom: 20,
-    borderBottom: '1px solid #eee'
+    color: '#ffed6b'
   },
   button: {
     border: 0,
-    fontSize: 18,
+    fontSize: 28,
+    padding: 10,
     cursor: 'pointer',
-    color: '#666',
+    color: '#fff',
+    fontWeight: 700,
     background: 'transparent'
   }
 };

@@ -1,24 +1,19 @@
 // @flow
 
-// $FlowFixMe
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef } from 'react';
 import glamorous, { Div } from 'glamorous';
-import { formatName } from '../formatters';
 import Counter from './Counter';
 import Button from './Button';
-import ClickOutside from './ClickOutside';
 import type { AggregatedTimetableItem } from '../types';
 
 const ListItem = glamorous.div(
   {
     fontWeight: ({ isActive }) => (isActive ? '700' : '400'),
     display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    borderRadius: 4,
     padding: 10,
-    borderRadius: 3,
     '&:nth-child(odd)': {
-      backgroundColor: '#f4f3f4'
+      backgroundColor: '#070a11'
     }
   },
   ({ isActive }) => ({
@@ -36,26 +31,7 @@ type Props = {
 };
 
 function TimetableItem(props: Props) {
-  const [editing, setEditing] = useState(false);
   const inputRef = useRef();
-
-  useEffect(
-    () => {
-      inputRef.current && inputRef.current.focus();
-      inputRef.current &&
-        inputRef.current.setSelectionRange(
-          props.item.task.length,
-          props.item.task.length + 1
-        );
-    },
-    [editing]
-  );
-
-  const handleKeyDown = (e: SyntheticKeyboardEvent<*>) => {
-    if (e.which === 27 || e.which === 13) {
-      setEditing(false);
-    }
-  };
 
   const {
     item,
@@ -74,18 +50,12 @@ function TimetableItem(props: Props) {
   return (
     <ListItem isActive={isActive}>
       <Div flex={1}>
-        {!editing ? (
-          <span onClick={() => setEditing(true)}>{formatName(item.task)}</span>
-        ) : (
-          <ClickOutside onClickOutside={() => setEditing(false)}>
-            <input
-              ref={inputRef}
-              value={item.task}
-              onKeyDown={handleKeyDown}
-              onChange={e => onNameChange(e.target.value)}
-            />
-          </ClickOutside>
-        )}
+        <input
+          ref={inputRef}
+          value={item.task}
+          style={{ fontWeight: isActive ? 700 : 400 }}
+          onChange={e => onNameChange(e.target.value)}
+        />
       </Div>
 
       <Button

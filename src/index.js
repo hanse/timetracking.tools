@@ -20,25 +20,26 @@ css.insert(`
 
 css.insert(`
   body {
-    font-size: 20px;
+    font-size: 22px;
     line-height: 2;
     font-family: system-ui, sans-serif;
-    color: #333;
+    color: #ddd;
+    background: #1B1D25;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
   }
 `);
 
 css.insert(`
   input {
     font-size: inherit;
-    padding: 10px 15px;
-    border-radius: 3px;
-    border: 1px solid #ccc;
-  }
-`);
-
-css.insert(`
-  input[type=text] {
-    min-width: 320px;
+    border: 0;
+    background: transparent;
+    color: #eee;
+    height: 44px;
+    padding: 10px;
+    width: 100%;
   }
 `);
 

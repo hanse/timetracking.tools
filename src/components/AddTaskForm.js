@@ -19,14 +19,33 @@ const AddTaskForm = ({ onSubmit }: Props) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex' }}>
-      <input
-        ref={ref => (input = ref)}
-        type="text"
-        placeholder="What did you just start on?"
-      />
+    <form
+      onSubmit={handleSubmit}
+      style={{
+        display: 'flex',
+        flex: 1,
+        background: '#070a11',
+        borderRadius: 4,
+        padding: '10px'
+      }}
+    >
+      <div style={{ flex: 1 }}>
+        <input
+          ref={ref => (input = ref)}
+          type="text"
+          placeholder="What did you just start on?"
+        />
+      </div>
 
-      <Button type="submit" style={{ marginLeft: 5 }} green>
+      <Button
+        type="submit"
+        style={{
+          padding: 10,
+          width: 100,
+          marginLeft: 5
+        }}
+        green
+      >
         Start
       </Button>
     </form>

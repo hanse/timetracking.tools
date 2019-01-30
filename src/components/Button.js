@@ -8,7 +8,7 @@ const gradient = color => `linear-gradient(${color}, ${darken(0.05, color)})`;
 
 const hoverColor = backgroundColor => {
   return {
-    background: gradient(backgroundColor),
+    background: backgroundColor,
     ':hover': {
       background: gradient(lighten(0.05, backgroundColor))
     }
@@ -24,26 +24,22 @@ function makeVariant(backgroundColor: string, textColor: string) {
 }
 
 const VARIANTS = {
-  red: ['#FF4136', '#FFF'],
+  red: ['#d1130c', '#FFF'],
   green: ['#3D9970', '#FFF'],
   teal: ['#39CCCC', '#001f3f'],
-  silver: ['#DDD', '#444'],
+  silver: ['#1B1D25', '#ddd'],
   plain: ['#ffff', '#6666']
 };
 
 const Button = glamorous.button(
   {
     border: 0,
-    outline: 0,
     cursor: 'pointer',
     padding: '0 10px',
     display: 'block',
     borderRadius: 4,
-    borderWidth: 1,
-    borderStyle: 'solid',
     fontSize: 'inherit',
     fontWeight: 400,
-    boxShadow: '0 1px 2px 0 rgba(0,0,0,0.1)',
     color: '#fff',
     ...makeVariant(...VARIANTS.silver),
     ':active': {
