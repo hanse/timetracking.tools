@@ -22,9 +22,6 @@ export function formatTime(ms: number): string {
 export const formatExact = (ms: number): string => (ms / 1000).toFixed(0);
 
 export const formatHalfHours = (ms: number): string =>
-  String(Math.ceil(ms / (3600 * 1000) * 2) / 2);
+  String(Math.ceil((ms / (3600 * 1000)) * 2) / 2);
 
-const isJiraTask = task => /^\d+$/.test(task);
-
-export const formatName = (task: string) =>
-  task ? (isJiraTask(task) ? `CS-${task}` : task) : 'nothing';
+export const formatName = (task: ?string) => (task ? task : 'nothing');

@@ -163,7 +163,12 @@ function App(props: Props) {
     dispatch(onFinishClicked());
   });
 
-  useEffect(() => props.saveState(state), [state]);
+  useEffect(
+    () => {
+      props.saveState(state);
+    },
+    [state]
+  );
   useEffect(() => {
     const task = state.active ? state.tasks[state.active].name : 'nothing';
     document.title = `Timetracker: ${task}`;
@@ -195,6 +200,7 @@ function App(props: Props) {
             padding={20}
             backgroundColor="#fff"
             boxShadow="0 1px 2px 0 rgba(0,0,0,0.05)"
+            maxWidth={960}
           >
             <Navigation history={props.history} date={props.date} />
             <Div

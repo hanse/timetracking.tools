@@ -78,7 +78,7 @@ function Loader({ date, history }) {
 
   useEffect(
     () => {
-      (() => async () => {
+      (async () => {
         setLoading(true);
         const result = await db.retrieve(date, null);
         setData((result || {}).tasks);
