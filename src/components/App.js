@@ -1,13 +1,12 @@
 // @flow
 
-// $FlowFixMe
-import React, { useReducer, useEffect, useState } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import cuid from 'cuid';
 import { Div, Label } from 'glamorous';
 import { produce } from 'immer';
 import TimetableItem from './TimetableItem';
 import { formatName, formatTime, formatHalfHours } from '../formatters';
-import aggregateTimetable, { aggregateCSV } from '../aggregateTimetable';
+import aggregateTimetable from '../aggregateTimetable';
 import Button from './Button';
 import Header from './Header';
 import AddTaskForm from './AddTaskForm';
@@ -22,7 +21,7 @@ type State = {
 
 type Props = {
   initialState: ?State,
-  saveState: State => void,
+  saveState: (state: ?State) => void,
   clearState: () => void,
   history: any,
   date: string
@@ -58,7 +57,7 @@ const initialState = {
   tasks: {}
 };
 
-const reducer = (state: State = initialState, action: Action) =>
+const reducer = (state: State, action: Action) =>
   produce(state, draft => {
     switch (action.type) {
       case 'TOGGLE_EXACT':
@@ -152,11 +151,13 @@ function useOnBeforeUnload(fn) {
 }
 
 function App(props: Props) {
-  const [state, dispatch] = useReducer(reducer, props.initialState, {
-    type: 'INIT'
-  });
-
-  const [debug, setDebug] = useState(false);
+  const [state, dispatch] = useReducer(
+    reducer,
+    props.initialState || initialState,
+    {
+      type: 'INIT'
+    }
+  );
 
   useOnBeforeUnload(() => {
     dispatch(onFinishClicked());
@@ -256,11 +257,6 @@ function App(props: Props) {
               Clear State
             </Button>
           </Div>
-        </Div>
-
-        <Div flex={1} overflowY="scroll" fontSize={14} padding={20}>
-          <Button onClick={() => setDebug(!debug)}>Show JSON</Button>
-          {debug && <pre>{JSON.stringify(aggregateCSV(tasks), null, 2)}</pre>}
         </Div>
       </Div>
     </Div>

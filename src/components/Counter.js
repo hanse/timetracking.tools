@@ -1,6 +1,5 @@
 // @flow
 
-// $FlowFixMe
 import { type Node, useState, useRef, useEffect } from 'react';
 
 type Props = {
@@ -28,7 +27,11 @@ function Counter(props: Props) {
         }, 500);
         counterRef.current = interval;
       }
-      return () => clearInterval(counterRef.current);
+      return () => {
+        if (counterRef.current) {
+          clearInterval(counterRef.current);
+        }
+      };
     },
     [props.active, props.initialDuration]
   );

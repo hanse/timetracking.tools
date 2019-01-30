@@ -1,6 +1,5 @@
 // @flow
 
-// $FlowFixMe
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import toDate from 'date-fns/toDate';
@@ -78,11 +77,13 @@ function Loader({ date, history }) {
   const [data, setData] = useState(null);
 
   useEffect(
-    async () => {
-      setLoading(true);
-      const result = await db.retrieve(date, null);
-      setData((result || {}).tasks);
-      setLoading(false);
+    () => {
+      (() => async () => {
+        setLoading(true);
+        const result = await db.retrieve(date, null);
+        setData((result || {}).tasks);
+        setLoading(false);
+      })();
     },
     [date]
   );
