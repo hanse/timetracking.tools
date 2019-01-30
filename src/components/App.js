@@ -178,6 +178,10 @@ function App(props: Props) {
   const formatDuration = exact ? formatTime : formatHalfHours;
 
   const handleClear = () => {
+    window.gtag('event', 'Delete all tasks', {
+      event_category: 'Tasks'
+    });
+
     dispatch({ type: 'CLEAR_STATE' });
     props.clearState();
   };

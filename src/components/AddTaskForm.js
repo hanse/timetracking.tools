@@ -13,6 +13,10 @@ const AddTaskForm = ({ onSubmit }: Props) => {
   const handleSubmit = (e: SyntheticEvent<*>) => {
     if (!input) return;
     e.preventDefault();
+    window.gtag('event', 'Add task', {
+      event_category: 'Tasks',
+      event_label: input.value
+    });
     input.value !== '' && onSubmit(input.value);
     input.value = '';
     input.focus();
@@ -31,6 +35,7 @@ const AddTaskForm = ({ onSubmit }: Props) => {
     >
       <div style={{ flex: 1 }}>
         <input
+          autoFocus
           ref={ref => (input = ref)}
           type="text"
           placeholder="What did you just start on?"

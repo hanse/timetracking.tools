@@ -24,7 +24,10 @@
     "flow": "flow"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "globals": {
+      "gtag": true
+    }
   },
   "prettier": {
     "singleQuote": true
