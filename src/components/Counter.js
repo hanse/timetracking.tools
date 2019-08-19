@@ -9,39 +9,27 @@ type Props = {
   startTime: Date
 };
 
-function Counter(props: Props) {
+function Counter({ active, initialDuration, startTime, format }: Props) {
   const counterRef = useRef();
-  const [state, setState] = useState({
-    value: props.initialDuration
-  });
+  const [duration, setDuration] = useState(initialDuration);
 
-  useEffect(
-    () => {
-      if (props.active) {
-        const interval = setInterval(() => {
-          setState(state => ({
-            ...state,
-            value:
-              Date.now() - props.startTime.getTime() + props.initialDuration
-          }));
-        }, 500);
-        counterRef.current = interval;
+  useEffect(() => {
+    if (active) {
+      const interval = setInterval(() => {
+        setDuration(Date.now() - startTime.getTime() + initialDuration);
+      }, 500);
+
+      counterRef.current = interval;
+    }
+
+    return () => {
+      if (counterRef.current) {
+        clearInterval(counterRef.current);
       }
-      return () => {
-        if (counterRef.current) {
-          clearInterval(counterRef.current);
-        }
-      };
-    },
-    [props.active, props.initialDuration]
-  );
+    };
+  }, [active, initialDuration, startTime]);
 
-  return props.format(state.value);
+  return format(duration);
 }
-
-Counter.defaultProps = {
-  format: n => n,
-  startTime: new Date()
-};
 
 export default Counter;
