@@ -28,19 +28,19 @@ type Props = {
 };
 
 type Action =
-  | {|
+  | {
       type: 'NEW_TASK',
       id: ID,
       task: ID,
       date: Date
-    |}
-  | {|
+    }
+  | {
       type: 'FINISH',
       date: Date
-    |}
-  | {|
+    }
+  | {
       type: 'TOGGLE_EXACT'
-    |}
+    }
   | {
       type: 'CHANGE_NAME',
       id: ID,
@@ -153,22 +153,16 @@ function useOnBeforeUnload(fn) {
 function App(props: Props) {
   const [state, dispatch] = useReducer(
     reducer,
-    props.initialState || initialState,
-    {
-      type: 'INIT'
-    }
+    props.initialState || initialState
   );
 
   useOnBeforeUnload(() => {
     dispatch(onFinishClicked());
   });
 
-  useEffect(
-    () => {
-      props.saveState(state);
-    },
-    [state]
-  );
+  useEffect(() => {
+    props.saveState(state);
+  }, [props, state]);
   useEffect(() => {
     const task = state.active ? state.tasks[state.active].name : 'nothing';
     document.title = `Timetracker: ${task}`;

@@ -1,6 +1,5 @@
 // @flow
 
-// $FlowFixMe
 import React, { useRef, useEffect } from 'react';
 
 type Props = {
@@ -21,7 +20,7 @@ function ClickOutside(props: Props) {
   useEffect(() => {
     document.addEventListener('click', handleClick, true);
     return () => document.removeEventListener('click', handleClick, true);
-  }, []);
+  }, [handleClick]);
 
   return <div ref={container} {...restProps} />;
 }
