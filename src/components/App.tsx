@@ -183,7 +183,7 @@ function App({ saveState, ...props }: Props) {
   return (
     <div className={styles.App}>
       <Header />
-      <div style={{ flex: 1, minHeight: '60vh' }}>
+      <div style={{ flex: 1 }}>
         <div style={{ flex: 1, overflowY: 'auto' }}>
           <Navigation history={props.history} date={props.date} />
 
@@ -205,12 +205,17 @@ function App({ saveState, ...props }: Props) {
         </div>
       </div>
 
-      <Button
-        style={{ marginTop: 20, padding: '7px 15px' }}
-        onClick={handleClear}
-      >
-        Delete Everything
-      </Button>
+      <div style={{ padding: '32px 0' }}>
+        <Button
+          onClick={() => {
+            if (window.confirm('Are you sure')) {
+              handleClear();
+            }
+          }}
+        >
+          Delete Everything
+        </Button>
+      </div>
     </div>
   );
 }

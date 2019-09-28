@@ -1,8 +1,8 @@
 .ListItem {
   font-weight: 400;
   display: flex;
-  border-radius: 4;
-  padding: 10;
+  border-radius: 4px;
+  padding: 10px;
 }
 
 .ListItem:nth-child(odd) {

@@ -1,0 +1,28 @@
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  margin-bottom: 20px;
+  color: #ffed6b;
+}
+
+.button {
+  border: 0;
+  font-size: 28px;
+  padding: 10px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 700;
+  background: transparent;
+}
+
+@media (max-width: 767px) {
+  .navigation {
+    display: block;
+  }
+
+  .buttonContainer {
+    display: flex;
+    justify-content: space-between;
+  }
+}
