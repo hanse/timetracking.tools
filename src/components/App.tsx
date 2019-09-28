@@ -11,7 +11,7 @@ import Navigation from './Navigation';
 import { Database, ID, AggregatedTimetableItem } from '../types';
 import styles from './App.module.css';
 
-type State = {
+export type State = {
   active: ID | null;
   tasks: Database;
   exact: boolean;

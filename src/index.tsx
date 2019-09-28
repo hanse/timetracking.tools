@@ -4,7 +4,7 @@ import format from 'date-fns/format';
 import { createBrowserHistory as createHistory } from 'history';
 import App from './components/App';
 import * as db from './db';
-import { TODO } from './types';
+import { TODO, Task } from './types';
 import { parse, parseISO } from 'date-fns';
 import './index.css';
 
@@ -17,15 +17,18 @@ function rehydrateState(parsedJson: any) {
 
   return {
     ...parsedJson,
-    tasks: Object.keys(parsedJson.tasks).reduce<any>((tasks, taskId) => {
-      tasks[taskId] = {
-        ...parsedJson.tasks[taskId],
-        timestamps: parsedJson.tasks[taskId].timestamps.map((date: string) =>
-          parseISO(date)
-        )
-      };
-      return tasks;
-    }, {})
+    tasks: Object.keys(parsedJson.tasks).reduce<{ [key: string]: Task }>(
+      (tasks, taskId) => {
+        tasks[taskId] = {
+          ...parsedJson.tasks[taskId],
+          timestamps: parsedJson.tasks[taskId].timestamps.map((date: string) =>
+            parseISO(date)
+          )
+        };
+        return tasks;
+      },
+      {}
+    )
   };
 }
 

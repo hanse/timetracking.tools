@@ -2,6 +2,8 @@ import format from 'date-fns/format';
 import { Database, AggregatedTimetable, AggregatedCSV } from './types';
 
 function chunks<T>(array: Array<T>, size: 2): Array<[T, T]>;
+function chunks<T>(array: Array<T>, size: 3): Array<[T, T, T]>;
+function chunks<T>(array: Array<T>, size: number): Array<Array<T>>;
 function chunks<T>(array: Array<T>, size: number): Array<Array<T>> {
   return array.reduce<Array<Array<T>>>((acc, item, index) => {
     index % size === 0 && acc.push([]);
@@ -68,7 +70,7 @@ export function aggregateCSV(timetable: Database): AggregatedCSV {
             date
           };
         })
-        .reduce<any>((acc, item) => {
+        .reduce<{ [key: string]: number }>((acc, item) => {
           acc[item.date] = item.duration;
           return acc;
         }, {})
