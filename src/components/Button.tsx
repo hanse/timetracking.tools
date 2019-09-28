@@ -1,22 +1,10 @@
 import React from 'react';
-import { lighten, darken } from 'polished';
+import { darken } from 'polished';
 import { HTMLProps } from 'react';
-
-const gradient = (color: string) =>
-  `linear-gradient(${color}, ${darken(0.05, color)})`;
-
-const hoverColor = (backgroundColor: string) => {
-  return {
-    background: backgroundColor,
-    ':hover': {
-      background: gradient(lighten(0.05, backgroundColor))
-    }
-  };
-};
 
 function makeVariant(backgroundColor: string, textColor: string) {
   return {
-    ...hoverColor(backgroundColor),
+    backgroundColor,
     borderColor: darken(0.08, backgroundColor),
     color: textColor
   };
@@ -38,7 +26,7 @@ function Button({ variant = 'silver', ...props }: Props) {
   return (
     <button
       {...props}
-      type="button"
+      type={props.type as any}
       style={{
         border: 0,
         cursor: 'pointer',

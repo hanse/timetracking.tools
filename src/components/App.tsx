@@ -1,6 +1,5 @@
 import React, { useReducer, useEffect } from 'react';
 import cuid from 'cuid';
-import { Div } from 'glamorous';
 import { produce } from 'immer';
 import TimetableItem from './TimetableItem';
 import { formatTime, formatHalfHours } from '../formatters';
@@ -10,6 +9,7 @@ import Header from './Header';
 import AddTaskForm from './AddTaskForm';
 import Navigation from './Navigation';
 import { Database, ID, AggregatedTimetableItem } from '../types';
+import styles from './App.module.css';
 
 type State = {
   active: ID | null;
@@ -179,18 +179,11 @@ function App(props: Props) {
   };
 
   return (
-    <Div
-      padding={30}
-      maxWidth={960}
-      margin="0 auto"
-      display="flex"
-      flexDirection="column"
-      justifyContent="space-between"
-    >
+    <div className={styles.App}>
       <Header />
-      <Div display="flex" flex={1} minHeight="60vh">
-        <Div flex={1} overflowY="auto">
-          <Div>
+      <div style={{ flex: 1, minHeight: '60vh' }}>
+        <div style={{ flex: 1, overflowY: 'auto' }}>
+          <div>
             <Navigation history={props.history} date={props.date} />
 
             {aggregateTimetable(tasks).map((item, index) => (
@@ -205,17 +198,12 @@ function App(props: Props) {
               />
             ))}
 
-            <Div
-              display="flex"
-              justifyContent="space-between"
-              marginTop={60}
-              borderRadius={4}
-            >
+            <div style={{ marginTop: 60, borderRadius: 4 }}>
               <AddTaskForm onSubmit={task => dispatch(onTaskAdded(task))} />
-            </Div>
-          </Div>
-        </Div>
-      </Div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <Button
         style={{ marginTop: 20, padding: '7px 15px' }}
@@ -223,7 +211,7 @@ function App(props: Props) {
       >
         Delete Everything
       </Button>
-    </Div>
+    </div>
   );
 }
 

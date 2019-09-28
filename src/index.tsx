@@ -1,57 +1,12 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import format from 'date-fns/format';
-import createHistory from 'history/createBrowserHistory';
-import { css } from 'glamor';
+import { createBrowserHistory as createHistory } from 'history';
 import App from './components/App';
 import * as db from './db';
 import { TODO } from './types';
 import { parse, parseISO } from 'date-fns';
-
-css.insert(`
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-  }
-`);
-
-css.insert(`
-  body {
-    font-size: 22px;
-    line-height: 2;
-    font-family: system-ui, sans-serif;
-    color: #ddd;
-    background: #1B1D25;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-  }
-`);
-
-css.insert(`
-  input {
-    font-size: inherit;
-    border: 0;
-    background: transparent;
-    color: #eee;
-    height: 44px;
-    padding: 10px;
-    width: 100%;
-  }
-`);
-
-css.insert(`
-  input[type='checkbox'] {
-    margin-right: 10px;
-  }`);
-
-css.insert(`
-  label {
-    cursor: pointer;
-  }
-`);
+import './index.css';
 
 const rootElement = document.getElementById('root');
 
@@ -59,8 +14,6 @@ function rehydrateState(parsedJson: any) {
   if (!parsedJson) {
     return undefined;
   }
-
-  console.log(parsedJson);
 
   return {
     ...parsedJson,

@@ -1,0 +1,14 @@
+.ListItem {
+  font-weight: 400;
+  display: flex;
+  border-radius: 4;
+  padding: 10;
+}
+
+.ListItem:nth-child(odd) {
+  background-color: #070a11;
+}
+
+.ListItem.active {
+  font-weight: 700;
+}

@@ -1,13 +1,14 @@
-import format from 'date-fns/fp/format';
+import format from 'date-fns/format';
 import { Database, AggregatedTimetable, AggregatedCSV } from './types';
 
-const chunks = (array: Array<any>, size: number) => {
-  return array.reduce((acc, item, index) => {
+function chunks<T>(array: Array<T>, size: 2): Array<[T, T]>;
+function chunks<T>(array: Array<T>, size: number): Array<Array<T>> {
+  return array.reduce<Array<Array<T>>>((acc, item, index) => {
     index % size === 0 && acc.push([]);
     acc[acc.length - 1].push(item);
     return acc;
   }, []);
-};
+}
 
 const differenceInMilliseconds = ([a, b]: [Date, Date]) =>
   b.getTime() - a.getTime();
@@ -45,11 +46,11 @@ function groupBy<T>(group: (item: T) => string) {
   };
 }
 
+const byDate = (item: Date): string => format(item, 'yyyy-MM-dd');
+
 export function aggregateCSV(timetable: Database): AggregatedCSV {
   return Object.keys(timetable).map(task => {
-    let timestampsByDate = groupBy(format('yyyy-MM-dd'))(
-      timetable[task].timestamps
-    );
+    let timestampsByDate = groupBy(byDate)(timetable[task].timestamps);
 
     return {
       task: timetable[task].name,

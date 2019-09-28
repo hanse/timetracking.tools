@@ -2,21 +2,7 @@ import React, { useRef } from 'react';
 import Counter from './Counter';
 import Button from './Button';
 import { AggregatedTimetableItem } from '../types';
-
-// const ListItem = glamorous.div(
-//   {
-//     fontWeight: ({ isActive }) => (isActive ? '700' : '400'),
-//     display: 'flex',
-//     borderRadius: 4,
-//     padding: 10,
-//     '&:nth-child(odd)': {
-//       backgroundColor: '#070a11'
-//     }
-//   },
-//   ({ isActive }) => ({
-//     fontWeight: isActive ? '700' : '400'
-//   })
-// );
+import styles from './TimetableItem.module.css';
 
 type Props = {
   formatDuration: (value: number) => string;
@@ -45,7 +31,7 @@ function TimetableItem(props: Props) {
       : new Date();
 
   return (
-    <div>
+    <div className={styles.ListItem}>
       <div style={{ flex: 1 }}>
         <input
           ref={inputRef}
