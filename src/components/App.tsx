@@ -1,5 +1,3 @@
-// @flow
-
 import React, { useReducer, useEffect } from 'react';
 import cuid from 'cuid';
 import { Div } from 'glamorous';
@@ -11,43 +9,43 @@ import Button from './Button';
 import Header from './Header';
 import AddTaskForm from './AddTaskForm';
 import Navigation from './Navigation';
-import type { Database, ID, AggregatedTimetableItem } from '../types';
+import { Database, ID, AggregatedTimetableItem } from '../types';
 
 type State = {
-  active: ?ID,
-  tasks: Database,
-  exact: boolean
+  active: ID | null;
+  tasks: Database;
+  exact: boolean;
 };
 
 type Props = {
-  initialState: ?State,
-  saveState: (state: ?State) => void,
-  clearState: () => void,
-  history: any,
-  date: string
+  initialState: State | null;
+  saveState: (state: State | null) => void;
+  clearState: () => void;
+  history: any;
+  date: string;
 };
 
 type Action =
   | {
-      type: 'NEW_TASK',
-      id: ID,
-      task: ID,
-      date: Date
+      type: 'NEW_TASK';
+      id: ID;
+      task: ID;
+      date: Date;
     }
   | {
-      type: 'FINISH',
-      date: Date
+      type: 'FINISH';
+      date: Date;
     }
   | {
-      type: 'TOGGLE_EXACT'
+      type: 'TOGGLE_EXACT';
     }
   | {
-      type: 'CHANGE_NAME',
-      id: ID,
-      name: string
+      type: 'CHANGE_NAME';
+      id: ID;
+      name: string;
     }
   | {
-      type: 'CLEAR_STATE'
+      type: 'CLEAR_STATE';
     }
   | { type: 'INIT' };
 
@@ -116,14 +114,14 @@ const reducer = (state: State, action: Action) =>
 // const onToggleExact = () => ({ type: 'TOGGLE_EXACT' });
 
 const onTaskAdded = (task: string) => ({
-  type: 'NEW_TASK',
+  type: 'NEW_TASK' as const,
   id: cuid(),
   task,
   date: new Date()
 });
 
 const onMakeActiveClicked = (item: AggregatedTimetableItem) => ({
-  type: 'NEW_TASK',
+  type: 'NEW_TASK' as const,
   id: item.id,
   task: item.task,
   date: new Date()
@@ -132,14 +130,14 @@ const onMakeActiveClicked = (item: AggregatedTimetableItem) => ({
 const onTaskNameChanged = (item: AggregatedTimetableItem) => (
   name: string
 ) => ({
-  type: 'CHANGE_NAME',
+  type: 'CHANGE_NAME' as const,
   id: item.id,
   name
 });
 
-const onFinishClicked = () => ({ type: 'FINISH', date: new Date() });
+const onFinishClicked = () => ({ type: 'FINISH' as const, date: new Date() });
 
-function useOnBeforeUnload(fn) {
+function useOnBeforeUnload(fn: () => void) {
   useEffect(() => {
     window.onbeforeunload = () => {
       fn();
@@ -172,7 +170,7 @@ function App(props: Props) {
   const formatDuration = exact ? formatTime : formatHalfHours;
 
   const handleClear = () => {
-    window.gtag('event', 'Delete all tasks', {
+    (window as any).gtag('event', 'Delete all tasks', {
       event_category: 'Tasks'
     });
 
@@ -220,7 +218,7 @@ function App(props: Props) {
       </Div>
 
       <Button
-        css={{ marginTop: 20, padding: '7px 15px' }}
+        style={{ marginTop: 20, padding: '7px 15px' }}
         onClick={handleClear}
       >
         Delete Everything

@@ -1,16 +1,15 @@
-// @flow
-
-import { type Node, useState, useRef, useEffect } from 'react';
+import React from 'react';
+import { useState, useRef, useEffect, ReactNode } from 'react';
 
 type Props = {
-  initialDuration: number,
-  active: boolean,
-  format: number => Node,
-  startTime: Date
+  initialDuration: number;
+  active: boolean;
+  format: (value: number) => ReactNode;
+  startTime: Date;
 };
 
 function Counter({ active, initialDuration, startTime, format }: Props) {
-  const counterRef = useRef();
+  const counterRef = useRef<any>();
   const [duration, setDuration] = useState(initialDuration);
 
   useEffect(() => {
@@ -29,7 +28,7 @@ function Counter({ active, initialDuration, startTime, format }: Props) {
     };
   }, [active, initialDuration, startTime]);
 
-  return format(duration);
+  return <>{format(duration)}</>;
 }
 
 export default Counter;

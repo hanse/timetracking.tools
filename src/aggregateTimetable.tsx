@@ -1,13 +1,7 @@
-// @flow
-
 import format from 'date-fns/fp/format';
-import type {
-  Database,
-  AggregatedTimetable,
-  AggregatedCSV
-} from './types';
+import { Database, AggregatedTimetable, AggregatedCSV } from './types';
 
-const chunks = (array, size) => {
+const chunks = (array: Array<any>, size: number) => {
   return array.reduce((acc, item, index) => {
     index % size === 0 && acc.push([]);
     acc[acc.length - 1].push(item);
@@ -15,9 +9,10 @@ const chunks = (array, size) => {
   }, []);
 };
 
-const differenceInMilliseconds = ([a, b]) => b.getTime() - a.getTime();
+const differenceInMilliseconds = ([a, b]: [Date, Date]) =>
+  b.getTime() - a.getTime();
 
-const add = (a, b) => a + b;
+const add = (a: number, b: number) => a + b;
 
 export default function aggregateTimetable(
   timetable: Database
@@ -40,13 +35,15 @@ export default function aggregateTimetable(
   });
 }
 
-const groupBy = group => collection => {
-  return collection.reduce((acc, item) => {
-    const key = group(item);
-    acc[key] = (acc[key] || []).concat(item);
-    return acc;
-  }, {});
-};
+function groupBy<T>(group: (item: T) => string) {
+  return (collection: Array<T>) => {
+    return collection.reduce<{ [key: string]: Array<T> }>((acc, item) => {
+      const key = group(item);
+      acc[key] = (acc[key] || []).concat(item);
+      return acc;
+    }, {});
+  };
+}
 
 export function aggregateCSV(timetable: Database): AggregatedCSV {
   return Object.keys(timetable).map(task => {
@@ -70,7 +67,7 @@ export function aggregateCSV(timetable: Database): AggregatedCSV {
             date
           };
         })
-        .reduce((acc, item) => {
+        .reduce<any>((acc, item) => {
           acc[item.date] = item.duration;
           return acc;
         }, {})

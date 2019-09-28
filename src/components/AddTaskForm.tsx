@@ -1,22 +1,22 @@
-// @flow
-
-import React from 'react';
+import React, { FormEvent } from 'react';
 import Button from './Button';
 
 type Props = {
-  onSubmit: string => mixed
+  onSubmit: (task: string) => void;
 };
 
 const AddTaskForm = ({ onSubmit }: Props) => {
-  let input;
+  let input: HTMLInputElement | null | undefined;
 
-  const handleSubmit = (e: SyntheticEvent<*>) => {
+  const handleSubmit = (e: FormEvent) => {
     if (!input) return;
     e.preventDefault();
-    window.gtag('event', 'Add task', {
+
+    (window as any).gtag('event', 'Add task', {
       event_category: 'Tasks',
       event_label: input.value
     });
+
     input.value !== '' && onSubmit(input.value);
     input.value = '';
     input.focus();
@@ -49,7 +49,6 @@ const AddTaskForm = ({ onSubmit }: Props) => {
           width: 100,
           marginLeft: 5
         }}
-        green
       >
         Start
       </Button>

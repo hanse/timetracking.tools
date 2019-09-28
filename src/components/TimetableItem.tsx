@@ -1,37 +1,34 @@
-// @flow
-
 import React, { useRef } from 'react';
-import glamorous, { Div } from 'glamorous';
 import Counter from './Counter';
 import Button from './Button';
-import type { AggregatedTimetableItem } from '../types';
+import { AggregatedTimetableItem } from '../types';
 
-const ListItem = glamorous.div(
-  {
-    fontWeight: ({ isActive }) => (isActive ? '700' : '400'),
-    display: 'flex',
-    borderRadius: 4,
-    padding: 10,
-    '&:nth-child(odd)': {
-      backgroundColor: '#070a11'
-    }
-  },
-  ({ isActive }) => ({
-    fontWeight: isActive ? '700' : '400'
-  })
-);
+// const ListItem = glamorous.div(
+//   {
+//     fontWeight: ({ isActive }) => (isActive ? '700' : '400'),
+//     display: 'flex',
+//     borderRadius: 4,
+//     padding: 10,
+//     '&:nth-child(odd)': {
+//       backgroundColor: '#070a11'
+//     }
+//   },
+//   ({ isActive }) => ({
+//     fontWeight: isActive ? '700' : '400'
+//   })
+// );
 
 type Props = {
-  formatDuration: (value: number) => string,
-  item: AggregatedTimetableItem,
-  isActive: boolean,
-  onMakeActiveClick: () => void,
-  onPauseClick: () => void,
-  onNameChange: (name: string) => void
+  formatDuration: (value: number) => string;
+  item: AggregatedTimetableItem;
+  isActive: boolean;
+  onMakeActiveClick: () => void;
+  onPauseClick: () => void;
+  onNameChange: (name: string) => void;
 };
 
 function TimetableItem(props: Props) {
-  const inputRef = useRef();
+  const inputRef = useRef<any>();
 
   const {
     item,
@@ -48,23 +45,23 @@ function TimetableItem(props: Props) {
       : new Date();
 
   return (
-    <ListItem isActive={isActive}>
-      <Div flex={1}>
+    <div>
+      <div style={{ flex: 1 }}>
         <input
           ref={inputRef}
           value={item.task}
           style={{ fontWeight: isActive ? 700 : 400 }}
           onChange={e => onNameChange(e.target.value)}
         />
-      </Div>
+      </div>
 
       <Button
-        green={isActive}
-        css={{
+        variant={isActive ? 'green' : undefined}
+        style={{
           padding: 10,
           width: 100,
           marginLeft: 5,
-          fontWeight: isActive ? '700' : '400'
+          fontWeight: isActive ? 700 : 400
         }}
         onClick={isActive ? onPauseClick : onMakeActiveClick}
         title={
@@ -80,7 +77,7 @@ function TimetableItem(props: Props) {
           format={value => <span>{formatDuration(value)}</span>}
         />
       </Button>
-    </ListItem>
+    </div>
   );
 }
 

@@ -1,6 +1,4 @@
-// @flow
-
-const pad = value => (value < 10 ? `0${value}` : value);
+const pad = (value: number) => (value < 10 ? `0${value}` : value);
 
 export function formatTime(ms: number): string {
   const time = Math.floor(ms / 1000);
@@ -24,4 +22,4 @@ export const formatExact = (ms: number): string => (ms / 1000).toFixed(0);
 export const formatHalfHours = (ms: number): string =>
   String(Math.ceil((ms / (3600 * 1000)) * 2) / 2);
 
-export const formatName = (task: ?string) => (task ? task : 'nothing');
+export const formatName = (task: string | null) => (task ? task : 'nothing');

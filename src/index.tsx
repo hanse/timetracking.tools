@@ -1,13 +1,12 @@
-// @flow
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import ReactDOM from 'react-dom';
-import toDate from 'date-fns/toDate';
 import format from 'date-fns/format';
 import createHistory from 'history/createBrowserHistory';
 import { css } from 'glamor';
 import App from './components/App';
 import * as db from './db';
+import { TODO } from './types';
+import { parse, parseISO } from 'date-fns';
 
 css.insert(`
   * {
@@ -54,40 +53,45 @@ css.insert(`
   }
 `);
 
-const rootElement: Element = (document.getElementById('root'): any);
+const rootElement = document.getElementById('root');
 
-function rehydrateState(parsedJson) {
+function rehydrateState(parsedJson: any) {
   if (!parsedJson) {
     return undefined;
   }
 
+  console.log(parsedJson);
+
   return {
     ...parsedJson,
-    tasks: Object.keys(parsedJson.tasks).reduce((tasks, taskId) => {
+    tasks: Object.keys(parsedJson.tasks).reduce<any>((tasks, taskId) => {
       tasks[taskId] = {
         ...parsedJson.tasks[taskId],
-        timestamps: parsedJson.tasks[taskId].timestamps.map(toDate)
+        timestamps: parsedJson.tasks[taskId].timestamps.map((date: string) =>
+          parseISO(date)
+        )
       };
       return tasks;
     }, {})
   };
 }
 
-function Loader({ date, history }) {
+function Loader({ date, history }: { date: string; history: any }) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
 
-  useEffect(
-    () => {
-      (async () => {
-        setLoading(true);
-        const result = await db.retrieve(date, null);
-        setData((result || {}).tasks);
-        setLoading(false);
-      })();
-    },
-    [date]
-  );
+  const parsedDate = useMemo(() => {
+    return parse(date, 'yyyy-MM-dd', new Date());
+  }, [date]);
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      const result = await db.retrieve<TODO>(parsedDate);
+      setData((result || {}).tasks);
+      setLoading(false);
+    })();
+  }, [parsedDate]);
 
   if (loading) {
     return null;
@@ -97,22 +101,22 @@ function Loader({ date, history }) {
     <App
       date={date}
       initialState={rehydrateState(data)}
-      saveState={state => db.save(date, state)}
+      saveState={state => db.save(parsedDate, state)}
       clearState={() => {}}
       history={history}
     />
   );
 }
 
-const getDate = location => {
+const getDate = (location: TODO): string => {
   if (location.pathname !== '/') {
     return location.pathname.replace(/^\/|\/$/g, '');
   }
 
-  return format(new Date(), 'YYYY-MM-dd');
+  return format(new Date(), 'yyyy-MM-dd');
 };
 
-const render = history => {
+const render = (history: TODO) => {
   const date = getDate(history.location);
   ReactDOM.render(<Loader date={date} history={history} />, rootElement);
 };
