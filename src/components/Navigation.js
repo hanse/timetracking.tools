@@ -3,7 +3,7 @@
 import React from 'react';
 import format from 'date-fns/format';
 import addDays from 'date-fns/addDays';
-import toDate from 'date-fns/toDate';
+import parse from 'date-fns/parse';
 
 type Props = {
   history: any,
@@ -13,10 +13,10 @@ type Props = {
 const FORMAT = 'iiii, LLLL do';
 
 function Navigation({ date, history }: Props) {
-  const parsedDate = toDate(date);
+  const parsedDate = parse(date, 'yyyy-MM-dd', new Date());
 
   const handleChange = offset => () => {
-    history.push('/' + format(addDays(parsedDate, offset), 'YYYY-MM-dd'));
+    history.push('/' + format(addDays(parsedDate, offset), 'yyyy-MM-dd'));
   };
 
   return (
