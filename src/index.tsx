@@ -1,10 +1,14 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import format from 'date-fns/format';
-import { createBrowserHistory as createHistory } from 'history';
-import App from './components/App';
+import {
+  createBrowserHistory as createHistory,
+  Location,
+  History
+} from 'history';
+import App, { State } from './components/App';
 import * as db from './db';
-import { TODO, Task } from './types';
+import { Task } from './types';
 import { parse, parseISO } from 'date-fns';
 import './index.css';
 
@@ -34,19 +38,30 @@ function rehydrateState(parsedJson: any) {
 
 function Loader({ date, history }: { date: string; history: any }) {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<State | null>(null);
 
   const parsedDate = useMemo(() => {
     return parse(date, 'yyyy-MM-dd', new Date());
   }, [date]);
 
+  const saveState = useCallback(state => db.save(parsedDate, state), [
+    parsedDate
+  ]);
+
   useEffect(() => {
+    let current = true;
     (async () => {
-      setLoading(true);
-      const result = await db.retrieve<TODO>(parsedDate);
-      setData((result || {}).tasks);
-      setLoading(false);
+      current && setLoading(true);
+      const result = await db.retrieve(parsedDate);
+      if (current && result != null) {
+        setData(result.tasks);
+      }
+      current && setLoading(false);
     })();
+
+    return () => {
+      current = false;
+    };
   }, [parsedDate]);
 
   if (loading) {
@@ -57,14 +72,14 @@ function Loader({ date, history }: { date: string; history: any }) {
     <App
       date={date}
       initialState={rehydrateState(data)}
-      saveState={state => db.save(parsedDate, state)}
+      saveState={saveState}
       clearState={() => {}}
       history={history}
     />
   );
 }
 
-const getDate = (location: TODO): string => {
+const getDate = (location: Location): string => {
   if (location.pathname !== '/') {
     return location.pathname.replace(/^\/|\/$/g, '');
   }
@@ -72,12 +87,12 @@ const getDate = (location: TODO): string => {
   return format(new Date(), 'yyyy-MM-dd');
 };
 
-const render = (history: TODO) => {
+const history = createHistory();
+
+const render = (history: History) => {
   const date = getDate(history.location);
   ReactDOM.render(<Loader date={date} history={history} />, rootElement);
 };
-
-const history = createHistory();
 
 history.listen(() => {
   render(history);

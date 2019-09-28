@@ -1,6 +1,5 @@
 import PouchDB from 'pouchdb';
 import { format } from 'date-fns';
-import { Database, Task } from './types';
 import { State } from './components/App';
 
 const db = new PouchDB('timetracker');
@@ -10,7 +9,7 @@ function id(date: Date) {
 }
 
 export async function save<T extends State>(date: Date, data: T | null) {
-  const document = await retrieve<{ _id: string; tasks: T | null }>(date);
+  const document = await retrieve<T | null>(date);
 
   if (document != null) {
     document.tasks = data;
@@ -23,7 +22,9 @@ export async function save<T extends State>(date: Date, data: T | null) {
   });
 }
 
-export async function retrieve<T>(date: Date): Promise<T | null> {
+export async function retrieve<T extends State | null>(
+  date: Date
+): Promise<{ _id: string; tasks: T } | null> {
   try {
     const document = await db.get(id(date));
     return document as any;

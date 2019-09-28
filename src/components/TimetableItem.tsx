@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import cx from 'classnames';
 import Counter from './Counter';
 import Button from './Button';
 import { AggregatedTimetableItem } from '../types';
@@ -31,7 +32,7 @@ function TimetableItem(props: Props) {
       : new Date();
 
   return (
-    <div className={styles.ListItem}>
+    <div className={cx(styles.ListItem, isActive && styles.active)}>
       <div style={{ flex: 1 }}>
         <input
           ref={inputRef}

@@ -1,7 +1,6 @@
 export type Duration = number;
 export type ID = string;
 export type Timetable = { [key: string]: Array<Date> };
-export type TODO = any;
 
 export type AggregatedTimetableItem = {
   task: ID;

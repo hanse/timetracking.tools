@@ -142,13 +142,14 @@ function useOnBeforeUnload(fn: () => void) {
     window.onbeforeunload = () => {
       fn();
     };
+
     return () => {
       window.onbeforeunload = null;
     };
   });
 }
 
-function App(props: Props) {
+function App({ saveState, ...props }: Props) {
   const [state, dispatch] = useReducer(
     reducer,
     props.initialState || initialState
@@ -159,8 +160,9 @@ function App(props: Props) {
   });
 
   useEffect(() => {
-    props.saveState(state);
-  }, [props, state]);
+    saveState(state);
+  }, [saveState, state]);
+
   useEffect(() => {
     const task = state.active ? state.tasks[state.active].name : 'nothing';
     document.title = `Timetracker: ${task}`;
@@ -183,24 +185,22 @@ function App(props: Props) {
       <Header />
       <div style={{ flex: 1, minHeight: '60vh' }}>
         <div style={{ flex: 1, overflowY: 'auto' }}>
-          <div>
-            <Navigation history={props.history} date={props.date} />
+          <Navigation history={props.history} date={props.date} />
 
-            {aggregateTimetable(tasks).map((item, index) => (
-              <TimetableItem
-                key={item.id}
-                item={item}
-                isActive={item.id === active}
-                formatDuration={formatDuration}
-                onNameChange={name => dispatch(onTaskNameChanged(item)(name))}
-                onMakeActiveClick={() => dispatch(onMakeActiveClicked(item))}
-                onPauseClick={() => dispatch(onFinishClicked())}
-              />
-            ))}
+          {aggregateTimetable(tasks).map(item => (
+            <TimetableItem
+              key={item.id}
+              item={item}
+              isActive={item.id === active}
+              formatDuration={formatDuration}
+              onNameChange={name => dispatch(onTaskNameChanged(item)(name))}
+              onMakeActiveClick={() => dispatch(onMakeActiveClicked(item))}
+              onPauseClick={() => dispatch(onFinishClicked())}
+            />
+          ))}
 
-            <div style={{ marginTop: 60, borderRadius: 4 }}>
-              <AddTaskForm onSubmit={task => dispatch(onTaskAdded(task))} />
-            </div>
+          <div style={{ marginTop: 60, borderRadius: 4 }}>
+            <AddTaskForm onSubmit={task => dispatch(onTaskAdded(task))} />
           </div>
         </div>
       </div>

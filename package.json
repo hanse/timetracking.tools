@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/classnames": "^2.2.9",
     "@types/history": "^4.7.3",
     "@types/node": "^12.7.8",
     "@types/pouchdb": "^6.4.0",
