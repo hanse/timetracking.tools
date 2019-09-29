@@ -54,7 +54,7 @@ function Loader({ date, history }: { date: string; history: any }) {
       current && setLoading(true);
       const result = await db.retrieve(parsedDate);
       if (current && result != null) {
-        setData(result.tasks);
+        setData(result);
       }
       current && setLoading(false);
     })();

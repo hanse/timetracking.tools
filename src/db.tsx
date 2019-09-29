@@ -8,23 +8,27 @@ function id(date: Date) {
   return format(date, 'yyyy-MM-dd');
 }
 
-export async function save<T extends State>(date: Date, data: T | null) {
+export async function save<T extends State>(date: Date, data: T) {
   const document = await retrieve<T | null>(date);
 
+  const json = JSON.parse(JSON.stringify(data));
+
   if (document != null) {
-    document.tasks = data;
+    document.tasks = json.tasks;
+    document.active = json.active;
+    document.exact = json.exact;
     return db.put(document);
   }
 
   return db.put({
     _id: id(date),
-    tasks: data
+    ...json
   });
 }
 
 export async function retrieve<T extends State | null>(
   date: Date
-): Promise<{ _id: string; tasks: T } | null> {
+): Promise<State | null> {
   try {
     const document = await db.get(id(date));
     return document as any;
