@@ -9,7 +9,7 @@ function id(date: Date) {
 }
 
 export async function save<T extends State>(date: Date, data: T) {
-  const document = await retrieve<T | null>(date);
+  const document = await retrieve<T>(date);
 
   const json = JSON.parse(JSON.stringify(data));
 
@@ -26,9 +26,7 @@ export async function save<T extends State>(date: Date, data: T) {
   });
 }
 
-export async function retrieve<T extends State | null>(
-  date: Date
-): Promise<State | null> {
+export async function retrieve<T extends State>(date: Date): Promise<T | null> {
   try {
     const document = await db.get(id(date));
     return document as any;
