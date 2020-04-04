@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import format from 'date-fns/format';
 import {
@@ -6,7 +6,9 @@ import {
   Location,
   History
 } from 'history';
-import App, { State } from './components/App';
+import { ErrorBoundary } from '@devmoods/ui';
+import useAbortablePromise from 'use-abortable-promise';
+import App from './components/App';
 import * as db from './db';
 import { Task } from './types';
 import { parse, parseISO } from 'date-fns';
@@ -36,33 +38,23 @@ function rehydrateState(parsedJson: any) {
   };
 }
 
-function Loader({ date, history }: { date: string; history: any }) {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<State | null>(null);
+function toDatabaseKey(date: string) {
+  return parse(date, 'yyyy-MM-dd', new Date());
+}
 
-  const parsedDate = useMemo(() => {
-    return parse(date, 'yyyy-MM-dd', new Date());
+function Loader({ date, history }: { date: string; history: any }) {
+  const [{ data, loading, error }] = useAbortablePromise(async () => {
+    const value = await db.retrieve(toDatabaseKey(date));
+    return rehydrateState(value);
   }, [date]);
 
-  const saveState = useCallback(state => db.save(parsedDate, state), [
-    parsedDate
+  const saveState = useCallback(state => db.save(toDatabaseKey(date), state), [
+    date
   ]);
 
-  useEffect(() => {
-    let current = true;
-    (async () => {
-      current && setLoading(true);
-      const result = await db.retrieve(parsedDate);
-      if (current && result != null) {
-        setData(result);
-      }
-      current && setLoading(false);
-    })();
-
-    return () => {
-      current = false;
-    };
-  }, [parsedDate]);
+  if (error) {
+    throw error;
+  }
 
   if (loading) {
     return null;
@@ -71,7 +63,7 @@ function Loader({ date, history }: { date: string; history: any }) {
   return (
     <App
       date={date}
-      initialState={rehydrateState(data)}
+      initialState={data}
       saveState={saveState}
       clearState={() => {}}
       history={history}
@@ -91,7 +83,12 @@ const history = createHistory();
 
 const render = (history: History) => {
   const date = getDate(history.location);
-  ReactDOM.render(<Loader date={date} history={history} />, rootElement);
+  ReactDOM.render(
+    <ErrorBoundary>
+      <Loader date={date} history={history} />
+    </ErrorBoundary>,
+    rootElement
+  );
 };
 
 history.listen(() => {
