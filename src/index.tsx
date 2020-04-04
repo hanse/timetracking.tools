@@ -1,11 +1,7 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import format from 'date-fns/format';
-import {
-  createBrowserHistory as createHistory,
-  Location,
-  History
-} from 'history';
+import { createBrowserHistory as createHistory, Location } from 'history';
 import { ErrorBoundary } from '@devmoods/ui';
 import useAbortablePromise from 'use-abortable-promise';
 import App from './components/App';
@@ -81,18 +77,21 @@ const getDate = (location: Location): string => {
 
 const history = createHistory();
 
-const render = (history: History) => {
-  const date = getDate(history.location);
-  ReactDOM.render(
-    <ErrorBoundary>
-      <Loader date={date} history={history} />
-    </ErrorBoundary>,
-    rootElement
-  );
-};
+function Root() {
+  const [page, setPage] = useState(() => getDate(history.location));
 
-history.listen(() => {
-  render(history);
-});
+  useEffect(() => {
+    return history.listen(() => {
+      setPage(getDate(history.location));
+    });
+  }, []);
 
-render(history);
+  return <Loader date={page} history={history} />;
+}
+
+ReactDOM.render(
+  <ErrorBoundary>
+    <Root />
+  </ErrorBoundary>,
+  rootElement
+);
