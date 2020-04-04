@@ -45,7 +45,7 @@ function TimetableItem(props: Props) {
       <Button
         color={isActive ? '#3D9970' : undefined}
         style={{
-          width: 100,
+          width: 120,
           justifyContent: 'center',
           marginLeft: 5,
           fontWeight: isActive ? 700 : 400

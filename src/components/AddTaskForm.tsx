@@ -42,7 +42,7 @@ function AddTaskForm({ onSubmit }: Props) {
         />
       </div>
 
-      <Button type="submit" style={{ width: 100, justifyContent: 'center' }}>
+      <Button type="submit" style={{ width: 120, justifyContent: 'center' }}>
         Start
       </Button>
     </form>
