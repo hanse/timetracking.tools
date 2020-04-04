@@ -4,11 +4,25 @@ import format from 'date-fns/format';
 import { createBrowserHistory as createHistory, Location } from 'history';
 import { ErrorBoundary } from '@devmoods/ui';
 import useAbortablePromise from 'use-abortable-promise';
+import * as Sentry from '@sentry/browser';
 import App from './components/App';
 import * as db from './db';
 import { Task } from './types';
 import { parse, parseISO } from 'date-fns';
 import './index.css';
+
+if (process.env.NODE_ENV === 'production') {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN
+  });
+}
+
+function onError(error: Error, errorInfo: any) {
+  Sentry.withScope(scope => {
+    scope.setExtras(errorInfo);
+    Sentry.captureException(error);
+  });
+}
 
 const rootElement = document.getElementById('root');
 
@@ -90,7 +104,7 @@ function Root() {
 }
 
 ReactDOM.render(
-  <ErrorBoundary>
+  <ErrorBoundary onError={onError}>
     <Root />
   </ErrorBoundary>,
   rootElement
