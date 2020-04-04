@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import format from 'date-fns/format';
 import { createBrowserHistory as createHistory, Location } from 'history';
-import { ErrorBoundary } from '@devmoods/ui';
+import { ErrorBoundary, Stack, ThemeProvider, createTheme } from '@devmoods/ui';
 import useAbortablePromise from 'use-abortable-promise';
 import * as Sentry from '@sentry/browser';
 import App from './components/App';
@@ -10,6 +10,8 @@ import * as db from './db';
 import { Task } from './types';
 import { parse, parseISO } from 'date-fns';
 import './index.css';
+import Header from './components/Header';
+import '@devmoods/ui/dist/styles.css';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -103,9 +105,22 @@ function Root() {
   return <Loader date={page} history={history} />;
 }
 
+const theme = createTheme({
+  primaryColor: '#1B1D25'
+});
+
 ReactDOM.render(
   <ErrorBoundary onError={onError}>
-    <Root />
+    <ThemeProvider theme={theme}>
+      <Stack
+        padding={16}
+        paddingTop={32}
+        style={{ maxWidth: 960, margin: '0 auto' }}
+      >
+        <Header />
+        <Root />
+      </Stack>
+    </ThemeProvider>
   </ErrorBoundary>,
   rootElement
 );

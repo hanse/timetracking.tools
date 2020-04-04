@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import cx from 'classnames';
 import Counter from './Counter';
-import Button from './Button';
+import { Button } from '@devmoods/ui';
 import { AggregatedTimetableItem } from '../types';
 import styles from './TimetableItem.module.css';
 
@@ -43,10 +43,10 @@ function TimetableItem(props: Props) {
       </div>
 
       <Button
-        variant={isActive ? 'green' : undefined}
+        color={isActive ? '#3D9970' : undefined}
         style={{
-          padding: 10,
           width: 100,
+          justifyContent: 'center',
           marginLeft: 5,
           fontWeight: isActive ? 700 : 400
         }}

@@ -1,15 +1,13 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useCallback } from 'react';
 import cuid from 'cuid';
 import { produce } from 'immer';
 import TimetableItem from './TimetableItem';
 import { formatTime, formatHalfHours } from '../formatters';
 import aggregateTimetable from '../aggregateTimetable';
-import Button from './Button';
-import Header from './Header';
+import { Button, Stack, Spacer } from '@devmoods/ui';
 import AddTaskForm from './AddTaskForm';
 import Navigation from './Navigation';
 import { Database, ID, AggregatedTimetableItem } from '../types';
-import styles from './App.module.css';
 
 export type State = {
   active: ID | null;
@@ -180,9 +178,12 @@ function App({ saveState, ...props }: Props) {
     props.clearState();
   };
 
+  const handleSubmit = useCallback(task => {
+    dispatch(onTaskAdded(task));
+  }, []);
+
   return (
-    <div className={styles.App}>
-      <Header />
+    <>
       <div style={{ flex: 1 }}>
         <div style={{ flex: 1, overflowY: 'auto' }}>
           <Navigation history={props.history} date={props.date} />
@@ -200,23 +201,25 @@ function App({ saveState, ...props }: Props) {
           ))}
 
           <div style={{ marginTop: 60, borderRadius: 4 }}>
-            <AddTaskForm onSubmit={task => dispatch(onTaskAdded(task))} />
+            <AddTaskForm onSubmit={handleSubmit} />
           </div>
         </div>
       </div>
 
-      <div style={{ padding: '32px 0' }}>
+      <Spacer height={32} />
+      <Stack padding={32} alignItems="center">
         <Button
           onClick={() => {
             if (window.confirm('Are you sure')) {
               handleClear();
             }
           }}
+          intent="danger"
         >
           Delete Everything
         </Button>
-      </div>
-    </div>
+      </Stack>
+    </>
   );
 }
 

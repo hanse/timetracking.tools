@@ -1,11 +1,11 @@
-import React, { FormEvent } from 'react';
-import Button from './Button';
+import React, { FormEvent, memo } from 'react';
+import { Button } from '@devmoods/ui';
 
 type Props = {
   onSubmit: (task: string) => void;
 };
 
-const AddTaskForm = ({ onSubmit }: Props) => {
+function AddTaskForm({ onSubmit }: Props) {
   let input: HTMLInputElement | null | undefined;
 
   const handleSubmit = (e: FormEvent) => {
@@ -42,18 +42,11 @@ const AddTaskForm = ({ onSubmit }: Props) => {
         />
       </div>
 
-      <Button
-        type="submit"
-        style={{
-          padding: 10,
-          width: 100,
-          marginLeft: 5
-        }}
-      >
+      <Button type="submit" style={{ width: 100, justifyContent: 'center' }}>
         Start
       </Button>
     </form>
   );
-};
+}
 
-export default AddTaskForm;
+export default memo(AddTaskForm);

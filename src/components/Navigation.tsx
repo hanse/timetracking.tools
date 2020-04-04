@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import format from 'date-fns/format';
 import addDays from 'date-fns/addDays';
 import parse from 'date-fns/parse';
@@ -41,4 +41,4 @@ function Navigation({ date, history }: Props) {
   );
 }
 
-export default Navigation;
+export default memo(Navigation);
